@@ -7,11 +7,11 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace EmployeeBenefits.Models
 {
-    public interface IModel
+    public interface IEntity
     {
     }
 
-    public interface IBeneficiary : IModel
+    public interface IBeneficiary : IEntity
     {
         string FirstName { get; set; }
         string LastName { get; set; }
@@ -26,6 +26,9 @@ namespace EmployeeBenefits.Models
     }
     public class Employee : IBeneficiary
     {
+        [BsonId]
+        public ObjectId Id { get; set; }
+        public int EmployeeNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Ssn { get; set; }

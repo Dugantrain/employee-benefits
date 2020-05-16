@@ -21,18 +21,19 @@ namespace EmployeeBenefits.Controllers
         [HttpGet]
         public async Task<IEnumerable<Employee>> GetEmployees()
         {
-            await _mongoDbEmployeeRepository.Create(new Employee
-            {
-                FirstName = "Mick",
-                LastName = "Duggars",
-                BaseRate = 1000,
-                Spouse = new Dependent
-                {
-                    FirstName = "Jessica",
-                    LastName = "Dugan"
-                }
-            });
-            return await _mongoDbEmployeeRepository.Get();
+            //await _mongoDbEmployeeRepository.Create(new Employee
+            //{
+            //    FirstName = "Mick",
+            //    LastName = "Duggars",
+            //    BaseRate = 1000,
+            //    Spouse = new Dependent
+            //    {
+            //        FirstName = "Jessica",
+            //        LastName = "Dugan"
+            //    }
+            //});
+            var employees = await _mongoDbEmployeeRepository.Get();
+            return employees;
         }
 
         [HttpGet("{id}")]
