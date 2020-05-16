@@ -1,0 +1,24 @@
+<h1 id="tableLabel">Employees</h1>
+
+<p *ngIf="!employees"><em>Loading...</em></p>
+
+<button class="btn btn-primary pull-right" (click)="incrementCounter()">Increment</button>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="employees">
+  <thead>
+  <tr>
+    <th>Employee Number</th>
+    <th>Name</th>
+    <th>SSN</th>
+    <th>Hitched?</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let employee of employees">
+    <td>{{ employee.employeeNumber }}</td>
+    <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+    <td>{{ employee.ssn }}</td>
+    <td>{{ employee.spouse ? 'Y' : 'N' }}</td>
+  </tr>
+  </tbody>
+</table>

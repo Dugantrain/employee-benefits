@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface IBeneficiary {
+export interface Dependent {
   firstName?: null | string;
   lastName?: null | string;
   ssn?: null | string;

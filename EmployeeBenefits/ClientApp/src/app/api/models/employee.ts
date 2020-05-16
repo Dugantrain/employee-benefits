@@ -1,11 +1,13 @@
 /* tslint:disable */
-import { IBeneficiary } from './i-beneficiary';
+import { Dependent } from './dependent';
+import { ObjectId } from './object-id';
 export interface Employee {
   baseRate?: number;
-  dependents?: null | Array<IBeneficiary>;
+  dependents?: null | Array<Dependent>;
+  employeeNumber?: number;
   firstName?: null | string;
-  id?: number;
+  id?: ObjectId;
   lastName?: null | string;
-  spouse?: IBeneficiary;
+  spouse?: Dependent;
   ssn?: null | string;
 }

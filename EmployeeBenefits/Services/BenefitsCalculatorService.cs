@@ -13,6 +13,16 @@ namespace EmployeeBenefits.Services
         //double GetDiscount(Employee employee);
 
     }
+
+    public class Benefits
+    {
+        public double BaseRate
+        {
+            get { return BenefitCosts.BaseRate; }
+        }
+
+    }
+
     public class BenefitsCalculatorService: IBenefitsCalculatorService
     {
         public double GetEmployeeBaseRate(Employee employee)
