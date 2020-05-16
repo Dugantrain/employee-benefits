@@ -8,12 +8,12 @@ namespace EmployeeBenefits.Services
 {
     public interface IBenefitsCalculatorService
     {
-        double GetBaseRate(Employee employee);
-        double GetBaseBenefitsCost(Employee employee);
-        double GetDiscount(Employee employee);
+        //double GetBaseRate(Employee employee);
+        //double GetBaseBenefitsCost(Employee employee);
+        //double GetDiscount(Employee employee);
 
     }
-    public class BenefitsCalculatorService
+    public class BenefitsCalculatorService: IBenefitsCalculatorService
     {
         public double GetEmployeeBaseRate(Employee employee)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeBenefits.Models;
+using EmployeeBenefits.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeBenefits.Controllers
@@ -11,11 +12,27 @@ namespace EmployeeBenefits.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
+        private readonly IMongoDbEmployeeRepository _mongoDbEmployeeRepository;
+        public EmployeeController(IMongoDbEmployeeRepository mongoDbEmployeeRepository)
+        {
+            _mongoDbEmployeeRepository = mongoDbEmployeeRepository;
+        }
 
         [HttpGet]
         public async Task<IEnumerable<Employee>> GetEmployees()
         {
-            return new List<Employee>();
+            await _mongoDbEmployeeRepository.Create(new Employee
+            {
+                FirstName = "Mick",
+                LastName = "Duggars",
+                BaseRate = 1000,
+                Spouse = new Dependent
+                {
+                    FirstName = "Jessica",
+                    LastName = "Dugan"
+                }
+            });
+            return await _mongoDbEmployeeRepository.Get();
         }
 
         [HttpGet("{id}")]
