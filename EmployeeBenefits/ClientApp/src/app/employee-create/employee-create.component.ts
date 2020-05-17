@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class EmployeeCreateComponent implements OnInit {
   public isMarried = false;
+  public newEmployee: Employee = <Employee>{};
   constructor(private employeeService: EmployeeService, private router: Router) {
   }
 
@@ -17,6 +18,10 @@ export class EmployeeCreateComponent implements OnInit {
   }
 
   public async onSubmit() {
-    this.router.navigate(['/list']);
+    this.employeeService.employeePost$Json({
+      body: this.newEmployee
+    }).subscribe((e: Employee) => {
+      this.router.navigate(['/list']);
+    });
   }
 }

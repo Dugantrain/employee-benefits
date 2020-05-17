@@ -21,18 +21,7 @@ namespace EmployeeBenefits.Controllers
         [HttpGet]
         public async Task<IEnumerable<Employee>> GetEmployees()
         {
-            //await _mongoDbEmployeeRepository.Create(new Employee
-            //{
-            //    FirstName = "Mick",
-            //    LastName = "Duggars",
-            //    BaseRate = 1000,
-            //    Spouse = new Dependent
-            //    {
-            //        FirstName = "Jessica",
-            //        LastName = "Dugan"
-            //    }
-            //});
-            var employees = await _mongoDbEmployeeRepository.Get();
+            var employees = await _mongoDbEmployeeRepository.GetAll();
             return employees;
         }
 
@@ -45,7 +34,8 @@ namespace EmployeeBenefits.Controllers
         [HttpPost]
         public async Task<Employee> Create(Employee employee)
         {
-            return new Employee();
+            var createdEmployee = await _mongoDbEmployeeRepository.Create(employee);
+            return createdEmployee;
         }
 
         [HttpPatch]

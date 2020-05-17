@@ -14,18 +14,16 @@
     <table class='table table-striped' aria-labelledby="tableLabel">
       <thead>
         <tr>
-          <th>Employee Number</th>
+          <th>Employee Identifier</th>
           <th>Name</th>
-          <th>SSN</th>
           <th>Hitched?</th>
           <th>Dependents</th>
         </tr>
       </thead>
       <tbody *ngIf="employees.length > 0">
         <tr *ngFor="let employee of employees">
-          <td>{{ employee.employeeNumber }}</td>
+          <td>{{ employee.employeeIdentifier }}</td>
           <td>{{ employee.firstName }} {{ employee.lastName }}</td>
-          <td>{{ employee.ssn }}</td>
           <td>{{ employee.spouse ? 'Y' : 'N' }}</td>
           <td>{{ employee.dependents ? employee.dependents.length : '0' }}</td>
         </tr>
