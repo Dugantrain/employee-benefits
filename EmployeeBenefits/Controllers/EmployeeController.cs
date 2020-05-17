@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EmployeeBenefits.Models;
 using EmployeeBenefits.Persistence;
+using EmployeeBenefits.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeBenefits.Controllers
@@ -13,9 +14,11 @@ namespace EmployeeBenefits.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IMongoDbEmployeeRepository _mongoDbEmployeeRepository;
-        public EmployeeController(IMongoDbEmployeeRepository mongoDbEmployeeRepository)
+        private readonly IBenefitsCalculatorService _benefitsCalculatorService;
+        public EmployeeController(IMongoDbEmployeeRepository mongoDbEmployeeRepository, IBenefitsCalculatorService benefitsCalculatorService)
         {
             _mongoDbEmployeeRepository = mongoDbEmployeeRepository;
+            _benefitsCalculatorService = benefitsCalculatorService;
         }
 
         [HttpGet]
@@ -34,6 +37,7 @@ namespace EmployeeBenefits.Controllers
         [HttpPost]
         public async Task<Employee> Create(Employee employee)
         {
+            employee = _benefitsCalculatorService.SetEmployeeCostsAndDeductions(employee);
             var createdEmployee = await _mongoDbEmployeeRepository.Create(employee);
             return createdEmployee;
         }

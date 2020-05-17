@@ -1,7 +1,7 @@
 /* tslint:disable */
-import { ObjectId } from './object-id';
 export interface Dependent {
+  discountApplied?: boolean;
   firstName?: null | string;
-  id?: ObjectId;
   lastName?: null | string;
+  yearlyBenefitsCost?: number;
 }

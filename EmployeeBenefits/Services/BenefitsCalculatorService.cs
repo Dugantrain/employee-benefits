@@ -8,54 +8,62 @@ namespace EmployeeBenefits.Services
 {
     public interface IBenefitsCalculatorService
     {
-        //double GetBaseRate(Employee employee);
-        //double GetBaseBenefitsCost(Employee employee);
-        //double GetDiscount(Employee employee);
+        Employee SetEmployeeCostsAndDeductions(Employee employee);
 
     }
 
-    public class Benefits
-    {
-        public double BaseRate
-        {
-            get { return BenefitCosts.BaseRate; }
-        }
-
-    }
 
     public class BenefitsCalculatorService: IBenefitsCalculatorService
     {
-        public double GetEmployeeBaseRate(Employee employee)
+        public Employee SetEmployeeCostsAndDeductions(Employee employee)
         {
-            return BenefitCosts.BaseRate;
+            double yearlyNetBenefitsCost = 0;
+            employee.WeeklyPayRate = BenefitCosts.WeeklyPayRate;
+            employee.YearlyPayRate = employee.WeeklyPayRate * BenefitCosts.NumberOfPayPeriods;
+            employee.YearlyBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
+            ApplyBeneficiaryDiscountIfApplicable(employee);
+            yearlyNetBenefitsCost += employee.YearlyBenefitsCost;
+            if (employee.Spouse != null)
+            {
+                employee.Spouse.YearlyBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                ApplyBeneficiaryDiscountIfApplicable(employee.Spouse);
+                yearlyNetBenefitsCost += employee.Spouse.YearlyBenefitsCost;
+            }
+
+            if (employee.Dependents != null)
+            {
+                foreach (var dependent in employee.Dependents)
+                {
+                    dependent.YearlyBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                    ApplyBeneficiaryDiscountIfApplicable(dependent);
+                    yearlyNetBenefitsCost += dependent.YearlyBenefitsCost;
+                }
+            }
+            employee.YearlyNetBenefitsCost = yearlyNetBenefitsCost;
+            employee.PayPeriodNetBenefitsCost = yearlyNetBenefitsCost / BenefitCosts.NumberOfPayPeriods;
+            return employee;
         }
 
-        public double GetEmployeeBaseBenefitsCost(Employee employee)
+        private IBeneficiary ApplyBeneficiaryDiscountIfApplicable(IBeneficiary beneficiary)
         {
-            return BenefitCosts.BaseEmployeeBenefitsCost;
-        }
-
-        public double GetDependentBenefitsBaseCost(Employee employee)
-        {
-            if (employee.Dependents == null || !employee.Dependents.Any()) return 0;
-            return employee.Dependents.Count() * BenefitCosts.DependentBenefitsBaseCost;
-        }
-
-        public double GetBeneficiaryCostWithOptionalDiscount(IBeneficiary beneficiary)
-        {
-            const double nameDiscount = .1;
-            return beneficiary.FirstName.ToLower().StartsWith("a") 
-                ? (BenefitCosts.DependentBenefitsBaseCost) * (BenefitCosts.BeneficiaryNameDiscount) 
-                : BenefitCosts.DependentBenefitsBaseCost;
+            if (beneficiary.FirstName.ToLower().StartsWith("a"))
+            {
+                beneficiary.YearlyBenefitsCost -= (beneficiary.YearlyBenefitsCost * BenefitCosts.BeneficiaryYearlyDiscountForLetterA);
+                beneficiary.DiscountApplied = true;
+            }
+            return beneficiary;
         }
 
     }
 
+    
+
     public static class BenefitCosts
     {
-        public static double BaseRate = 2000;
-        public static double BaseEmployeeBenefitsCost = 1000;
-        public static double DependentBenefitsBaseCost = 500;
-        public static double BeneficiaryNameDiscount = .1;
+        public static double WeeklyPayRate = 2000;
+        public static double EmployeeBenefitsYearlyBaseCost = 1000;
+        public static double DependentBenefitsYearlyBaseCost = 500;
+        public static double BeneficiaryYearlyDiscountForLetterA = .1;
+        public static int NumberOfPayPeriods = 26;
     }
 }
