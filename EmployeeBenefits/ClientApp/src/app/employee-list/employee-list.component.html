@@ -3,28 +3,40 @@
 <div *ngIf="employees">
   <div class="row mb-3">
     <div class="col-6 mt-3">
-      <em>Select an employee to get started.</em>
+      <em *ngIf="employees.length > 0">Select an employee to get started.</em>
+      <em *ngIf="employees.length == 0">Add an employee to get started.</em>
     </div>
     <div class="col-6">
       <button class="btn btn-primary float-right" [routerLink]="['/create']">Add Employee</button>
     </div>
   </div>
-  <table class='table table-striped' aria-labelledby="tableLabel">
-    <thead>
-    <tr>
-      <th>Employee Number</th>
-      <th>Name</th>
-      <th>SSN</th>
-      <th>Hitched?</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let employee of employees">
-      <td>{{ employee.employeeNumber }}</td>
-      <td>{{ employee.firstName }} {{ employee.lastName }}</td>
-      <td>{{ employee.ssn }}</td>
-      <td>{{ employee.spouse ? 'Y' : 'N' }}</td>
-    </tr>
-    </tbody>
-  </table>
+  <div>
+    <table class='table table-striped' aria-labelledby="tableLabel">
+      <thead>
+        <tr>
+          <th>Employee Number</th>
+          <th>Name</th>
+          <th>SSN</th>
+          <th>Hitched?</th>
+          <th>Dependents</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="employees.length > 0">
+        <tr *ngFor="let employee of employees">
+          <td>{{ employee.employeeNumber }}</td>
+          <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+          <td>{{ employee.ssn }}</td>
+          <td>{{ employee.spouse ? 'Y' : 'N' }}</td>
+          <td>{{ employee.dependents ? employee.dependents.length : '0' }}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="employees.length == 0">
+        <tr>
+          <td colspan="5" class="text-center">
+            <em>There are currently no employees.</em>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

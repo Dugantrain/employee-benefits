@@ -1,30 +1,37 @@
 <h1 id="tableLabel">Add Employee</h1>
 <form>
-  <div class="form-group">
-    <label for="employeeNumber">Employee ID</label>
-    <input class="form-control" id="employeeNumber" placeholder="Employee ID">
-    <small id="employeeIdHelp" class="form-text text-muted">This value must be unique per employee.</small>
+  <div class="row">
+    <div class="form-group col-8">
+      <label for="employeeNumber">Employee ID</label>
+      <input class="form-control" id="employeeNumber" placeholder="Employee ID">
+      <small id="employeeIdHelp" class="form-text text-muted">This value must be unique per employee.</small>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="firstName">First Name</label>
-    <input class="form-control" id="firstName" placeholder="First Name">
+  <div class="row">
+    <div class="form-group col-6">
+      <label for="firstName">First Name</label>
+      <input class="form-control" id="firstName" placeholder="First Name">
+    </div>
+    <div class="form-group col-6">
+      <label for="lastName">Last Name</label>
+      <input class="form-control" id="lastName" placeholder="Last Name">
+    </div>
   </div>
-  <div class="form-group">
-    <label for="lastName">Last Name</label>
-    <input class="form-control" id="lastName" placeholder="Last Name">
-  </div>
-  <div class="form-check">
+
+  <div class="form-check mb-2">
     <input type="checkbox" [(ngModel)]="isMarried" class="form-check-input" id="isMarried" name="isMarried">
     <label class="form-check-label" for="hasSpouse">Married?</label>
   </div>
   <div *ngIf="isMarried">
-    <div class="form-group">
-      <label for="firstName">First Name</label>
-      <input class="form-control" id="firstName" placeholder="First Name">
-    </div>
-    <div class="form-group">
-      <label for="lastName">Last Name</label>
-      <input class="form-control" id="lastName" placeholder="Last Name">
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="spouseFirstName">Spouse First Name</label>
+        <input class="form-control" id="spouseFirstName" placeholder="Spouse First Name">
+      </div>
+      <div class="form-group col-6">
+        <label for="spouseLastName">Spouse Last Name</label>
+        <input class="form-control" id="spouseLastName" placeholder="Spouse Last Name">
+      </div>
     </div>
   </div>
 
