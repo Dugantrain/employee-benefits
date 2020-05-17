@@ -32,7 +32,14 @@ namespace EmployeeBenefits.Controllers
         [HttpGet("{id}")]
         public async Task<Employee> Get(string id)
         {
-            return new Employee();
+            return await _mongoDbEmployeeRepository.GetById(id);
+        }
+
+        [HttpPatch("{id}/benefits-costs")]
+        public Employee ApplyCostsAndDeductions(Employee employee)
+        {
+            employee = _benefitsCalculatorService.SetEmployeeCostsAndDeductions(employee);
+            return employee;
         }
 
         [HttpPost]

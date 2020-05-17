@@ -42,11 +42,49 @@
     </div>
   </div>
 
-
- 
-  <div *ngIf="isMarried">
-    
+  <div class="row">
+    <h3>Dependents</h3>
+  </div>
+  <div class="col-6">
+    <div class="row">
+      <div class="form-group col-4">
+        <label for="newDependentFirstName">First Name</label>
+        <input name="dependentFirstName" [(ngModel)]="newDependent.firstName" class="form-control" id="newDependentFirstName" placeholder="First Name">
+      </div>
+      <div class="form-group col-4">
+        <label for="newDependentLastName">Last Name</label>
+        <input name="dependentLastName" [(ngModel)]="newDependent.lastName" class="form-control" id="newDependentLastName" placeholder="Last Name">
+      </div>
+      <div class="form-group col-1">
+        <button type="button" class="btn btn-sm btn-secondary" (click)="addDependent()">Add</button>
+      </div>
+    </div>
   </div>
 
+  <div class="col-6">
+    <table class='table table-striped' aria-labelledby="tableLabel">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dependent of newEmployee.dependents">
+          <td>{{ dependent.firstName }} {{ dependent.lastName }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-danger" (click)="removeDependent(dependent)">Remove</button>
+          </td>
+        </tr>
+        <tr *ngIf="newEmployee.dependents.length === 0">
+          <td colspan="2" class="text-center">
+            <em>There are currently no dependents.</em>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <button type="submit" class="btn btn-primary">Submit</button>
+
+
 </form>

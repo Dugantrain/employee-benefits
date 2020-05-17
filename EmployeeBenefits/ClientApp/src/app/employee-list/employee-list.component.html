@@ -3,7 +3,6 @@
 <div *ngIf="employees">
   <div class="row mb-3">
     <div class="col-6 mt-3">
-      <em *ngIf="employees.length > 0">Select an employee to get started.</em>
       <em *ngIf="employees.length == 0">Add an employee to get started.</em>
     </div>
     <div class="col-6">
@@ -18,7 +17,7 @@
           <th>Name</th>
           <th>Married?</th>
           <th>Other Dependents</th>
-          <th>Yearly Cost</th>
+          <th>Cost Per Year</th>
           <th>Cost Per Period</th>
           <th>Action</th>
         </tr>
@@ -31,7 +30,10 @@
           <td>{{ employee.dependents ? employee.dependents.length : '0' }}</td>
           <td>{{ employee.yearlyNetBenefitsCost | number:'.2-2' }}</td>
           <td>{{ employee.payPeriodNetBenefitsCost | number:'.2-2' }}</td>
-          <td><button class="btn btn-sm btn-danger" (click)="removeEmployee(employee.id)">Remove</button></td>
+          <td>
+            <button class="btn btn-sm btn-secondary mr-1" (click)="xxxxxxxxxxx">Update</button>
+            <button class="btn btn-sm btn-danger" (click)="removeEmployee(employee.id)">Remove</button>
+          </td>
         </tr>
       </tbody>
       <tbody *ngIf="employees.length == 0">
