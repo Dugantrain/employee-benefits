@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EmployeeBenefits.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace EmployeeBenefits.Persistence
 {
     public interface IMongoDbEmployeeRepository
     {
+        Task<IEnumerable<Employee>> GetAll();
+        Task<Employee> GetById(string id);
+        Task<Employee> GetByEmployeeIdentifier(string employeeIdentifier);
         Task<Employee> Create(Employee employee);
-        Task DeleteByEmployeeId(int employeeId);
-        Task<IEnumerable<Employee>> Get();
+        Task DeleteById(int employeeId);
     }
 
     public class MongoDbEmployeeRepository  : IMongoDbEmployeeRepository
@@ -38,15 +41,30 @@ namespace EmployeeBenefits.Persistence
             }
         }
 
-        public async Task<IEnumerable<Employee>> Get()
+        public async Task<IEnumerable<Employee>> GetAll()
         {
-            var filter = Builders<Employee>.Filter.Ne(x => x.FirstName, Guid.NewGuid().ToString());
-            var employees = await _employeeCollection.Find(filter)
+            var employees = await _employeeCollection.Find(new BsonDocument())
                 .ToListAsync();
             return employees;
         }
 
-        public async Task DeleteByEmployeeId(int employeeId)
+        public async Task<Employee> GetById(string id)
+        {
+            var filter = Builders<Employee>.Filter.Eq(x => x.Id, ObjectId.Parse(id));
+            var employee = await _employeeCollection.Find(filter)
+                .FirstOrDefaultAsync();
+            return employee;
+        }
+
+        public async Task<Employee> GetByEmployeeIdentifier(string employeeIdentifier)
+        {
+            var filter = Builders<Employee>.Filter.Eq(x => x.EmployeeIdentifier, employeeIdentifier);
+            var employee = await _employeeCollection.Find(filter)
+                .FirstOrDefaultAsync();
+            return employee;
+        }
+
+        public async Task DeleteById(int employeeId)
         {
             var filter = Builders<Employee>.Filter.Eq(x => x.LastName, employeeId.ToString());
             var employee = await _employeeCollection.DeleteOneAsync(filter);
