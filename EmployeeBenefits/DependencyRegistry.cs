@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmployeeBenefits.Models;
 using EmployeeBenefits.Persistence;
 using EmployeeBenefits.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace EmployeeBenefits
@@ -17,6 +22,14 @@ namespace EmployeeBenefits
             services.AddSingleton<IMongoDbEmployeeRepository, MongoDbEmployeeRepository>();
             services.AddSingleton<IBenefitsCalculatorService, BenefitsCalculatorService>();
             services.AddSingleton(GetMongoDatabase());
+
+            BsonClassMap.RegisterClassMap<Employee>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapIdProperty(c => c.Id)
+                    .SetIdGenerator(StringObjectIdGenerator.Instance)
+                    .SetSerializer(new StringSerializer(BsonType.ObjectId));
+            });
         }
 
         private static IMongoDatabase GetMongoDatabase()

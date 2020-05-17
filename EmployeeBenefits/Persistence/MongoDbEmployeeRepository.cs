@@ -13,7 +13,7 @@ namespace EmployeeBenefits.Persistence
         Task<Employee> GetById(string id);
         Task<Employee> GetByEmployeeIdentifier(string employeeIdentifier);
         Task<Employee> Create(Employee employee);
-        Task DeleteById(int employeeId);
+        Task DeleteById(string id);
     }
 
     public class MongoDbEmployeeRepository  : IMongoDbEmployeeRepository
@@ -50,7 +50,7 @@ namespace EmployeeBenefits.Persistence
 
         public async Task<Employee> GetById(string id)
         {
-            var filter = Builders<Employee>.Filter.Eq(x => x.Id, ObjectId.Parse(id));
+            var filter = Builders<Employee>.Filter.Eq(x => x.Id, id);
             var employee = await _employeeCollection.Find(filter)
                 .FirstOrDefaultAsync();
             return employee;
@@ -64,12 +64,12 @@ namespace EmployeeBenefits.Persistence
             return employee;
         }
 
-        public async Task DeleteById(int employeeId)
+        public async Task DeleteById(string id)
         {
-            var filter = Builders<Employee>.Filter.Eq(x => x.LastName, employeeId.ToString());
+            var filter = Builders<Employee>.Filter.Eq(x => x.Id, id);
             var employee = await _employeeCollection.DeleteOneAsync(filter);
             if (employee.DeletedCount == 0)
-                throw new Exception($"Unable to delete {employeeId}.");
+                throw new Exception($"Unable to delete {id}.");
         }
     }
 }

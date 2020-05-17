@@ -1,12 +1,11 @@
 /* tslint:disable */
 import { Dependent } from './dependent';
-import { ObjectId } from './object-id';
 export interface Employee {
   dependents?: null | Array<Dependent>;
   discountApplied?: boolean;
   employeeIdentifier?: null | string;
   firstName?: null | string;
-  id?: ObjectId;
+  id?: null | string;
   lastName?: null | string;
   payPeriodNetBenefitsCost?: number;
   spouse?: Dependent;

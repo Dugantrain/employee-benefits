@@ -12,13 +12,19 @@ export class EmployeeListComponent {
   constructor(private employeeService: EmployeeService) {
   }
 
-  async ngOnInit() {
+  public async ngOnInit() {
     this.getAllEmployees();
   }
 
-  async getAllEmployees() {
+  public async getAllEmployees() {
     await this.employeeService.employeeGet$Json().subscribe((e: Employee[]) => {
       this.employees = e;
+    });
+  }
+
+  public async removeEmployee(id: string) {
+    await this.employeeService.employeeDelete({id: id}).subscribe(() => {
+      this.getAllEmployees();
     });
   }
 }

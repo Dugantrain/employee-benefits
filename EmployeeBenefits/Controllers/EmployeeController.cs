@@ -6,6 +6,7 @@ using EmployeeBenefits.Models;
 using EmployeeBenefits.Persistence;
 using EmployeeBenefits.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace EmployeeBenefits.Controllers
 {
@@ -29,7 +30,7 @@ namespace EmployeeBenefits.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Employee> Get(int id)
+        public async Task<Employee> Get(string id)
         {
             return new Employee();
         }
@@ -49,9 +50,9 @@ namespace EmployeeBenefits.Controllers
         }
 
         [HttpDelete]
-        public async Task Remove(int id)
+        public async Task Remove(string id)
         {
-            
+            await _mongoDbEmployeeRepository.DeleteById(id);
         }
     }
 }

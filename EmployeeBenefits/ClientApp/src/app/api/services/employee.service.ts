@@ -209,7 +209,7 @@ export class EmployeeService extends BaseService {
    * This method doesn't expect any request body.
    */
   employeeDelete$Response(params?: {
-    id?: number;
+    id?: null | string;
 
   }): Observable<StrictHttpResponse<void>> {
 
@@ -237,7 +237,7 @@ export class EmployeeService extends BaseService {
    * This method doesn't expect any request body.
    */
   employeeDelete(params?: {
-    id?: number;
+    id?: null | string;
 
   }): Observable<void> {
 
@@ -347,7 +347,7 @@ export class EmployeeService extends BaseService {
    * This method doesn't expect any request body.
    */
   employeeIdGet$Plain$Response(params: {
-    id: number;
+    id: null | string;
 
   }): Observable<StrictHttpResponse<Employee>> {
 
@@ -375,7 +375,7 @@ export class EmployeeService extends BaseService {
    * This method doesn't expect any request body.
    */
   employeeIdGet$Plain(params: {
-    id: number;
+    id: null | string;
 
   }): Observable<Employee> {
 
@@ -391,7 +391,7 @@ export class EmployeeService extends BaseService {
    * This method doesn't expect any request body.
    */
   employeeIdGet$Json$Response(params: {
-    id: number;
+    id: null | string;
 
   }): Observable<StrictHttpResponse<Employee>> {
 
@@ -419,7 +419,7 @@ export class EmployeeService extends BaseService {
    * This method doesn't expect any request body.
    */
   employeeIdGet$Json(params: {
-    id: number;
+    id: null | string;
 
   }): Observable<Employee> {
 

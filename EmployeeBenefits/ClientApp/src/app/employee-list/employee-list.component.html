@@ -20,6 +20,7 @@
           <th>Other Dependents</th>
           <th>Yearly Cost</th>
           <th>Cost Per Period</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody *ngIf="employees.length > 0">
@@ -30,11 +31,12 @@
           <td>{{ employee.dependents ? employee.dependents.length : '0' }}</td>
           <td>{{ employee.yearlyNetBenefitsCost | number:'.2-2' }}</td>
           <td>{{ employee.payPeriodNetBenefitsCost | number:'.2-2' }}</td>
+          <td><button class="btn btn-sm btn-danger" (click)="removeEmployee(employee.id)">Remove</button></td>
         </tr>
       </tbody>
       <tbody *ngIf="employees.length == 0">
         <tr>
-          <td colspan="5" class="text-center">
+          <td colspan="7" class="text-center">
             <em>There are currently no employees.</em>
           </td>
         </tr>

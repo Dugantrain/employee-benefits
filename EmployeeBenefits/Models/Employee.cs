@@ -29,7 +29,7 @@ namespace EmployeeBenefits.Models
     public class Employee : IBeneficiary
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
         public string EmployeeIdentifier { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
