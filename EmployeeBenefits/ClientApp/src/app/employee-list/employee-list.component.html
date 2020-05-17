@@ -14,10 +14,12 @@
     <table class='table table-striped' aria-labelledby="tableLabel">
       <thead>
         <tr>
-          <th>Employee Identifier</th>
+          <th>Employee ID</th>
           <th>Name</th>
-          <th>Hitched?</th>
-          <th>Dependents</th>
+          <th>Married?</th>
+          <th>Other Dependents</th>
+          <th>Yearly Cost</th>
+          <th>Cost Per Period</th>
         </tr>
       </thead>
       <tbody *ngIf="employees.length > 0">
@@ -26,6 +28,8 @@
           <td>{{ employee.firstName }} {{ employee.lastName }}</td>
           <td>{{ employee.spouse ? 'Y' : 'N' }}</td>
           <td>{{ employee.dependents ? employee.dependents.length : '0' }}</td>
+          <td>{{ employee.yearlyNetBenefitsCost | number:'.2-2' }}</td>
+          <td>{{ employee.payPeriodNetBenefitsCost | number:'.2-2' }}</td>
         </tr>
       </tbody>
       <tbody *ngIf="employees.length == 0">
