@@ -522,25 +522,23 @@ export class EmployeeService extends BaseService {
   }
 
   /**
-   * Path part for operation employeeIdBenefitsCostsPatch
+   * Path part for operation employeeBenefitsPatch
    */
-  static readonly EmployeeIdBenefitsCostsPatchPath = '/Employee/{id}/benefits-costs';
+  static readonly EmployeeBenefitsPatchPath = '/Employee/benefits';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `employeeIdBenefitsCostsPatch$Plain()` instead.
+   * To access only the response body, use `employeeBenefitsPatch$Plain()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  employeeIdBenefitsCostsPatch$Plain$Response(params: {
-    id: string;
+  employeeBenefitsPatch$Plain$Response(params?: {
       body?: Employee
   }): Observable<StrictHttpResponse<Employee>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EmployeeService.EmployeeIdBenefitsCostsPatchPath, 'patch');
+    const rb = new RequestBuilder(this.rootUrl, EmployeeService.EmployeeBenefitsPatchPath, 'patch');
     if (params) {
 
-      rb.path('id', params.id, {});
 
       rb.body(params.body, 'application/*+json');
     }
@@ -557,35 +555,32 @@ export class EmployeeService extends BaseService {
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `employeeIdBenefitsCostsPatch$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `employeeBenefitsPatch$Plain$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  employeeIdBenefitsCostsPatch$Plain(params: {
-    id: string;
+  employeeBenefitsPatch$Plain(params?: {
       body?: Employee
   }): Observable<Employee> {
 
-    return this.employeeIdBenefitsCostsPatch$Plain$Response(params).pipe(
+    return this.employeeBenefitsPatch$Plain$Response(params).pipe(
       map((r: StrictHttpResponse<Employee>) => r.body as Employee)
     );
   }
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `employeeIdBenefitsCostsPatch$Json()` instead.
+   * To access only the response body, use `employeeBenefitsPatch$Json()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  employeeIdBenefitsCostsPatch$Json$Response(params: {
-    id: string;
+  employeeBenefitsPatch$Json$Response(params?: {
       body?: Employee
   }): Observable<StrictHttpResponse<Employee>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EmployeeService.EmployeeIdBenefitsCostsPatchPath, 'patch');
+    const rb = new RequestBuilder(this.rootUrl, EmployeeService.EmployeeBenefitsPatchPath, 'patch');
     if (params) {
 
-      rb.path('id', params.id, {});
 
       rb.body(params.body, 'application/*+json');
     }
@@ -602,16 +597,15 @@ export class EmployeeService extends BaseService {
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `employeeIdBenefitsCostsPatch$Json$Response()` instead.
+   * To access the full response (for headers, for example), `employeeBenefitsPatch$Json$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  employeeIdBenefitsCostsPatch$Json(params: {
-    id: string;
+  employeeBenefitsPatch$Json(params?: {
       body?: Employee
   }): Observable<Employee> {
 
-    return this.employeeIdBenefitsCostsPatch$Json$Response(params).pipe(
+    return this.employeeBenefitsPatch$Json$Response(params).pipe(
       map((r: StrictHttpResponse<Employee>) => r.body as Employee)
     );
   }

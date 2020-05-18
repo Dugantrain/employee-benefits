@@ -18,6 +18,58 @@
           <input [(ngModel)]="newEmployee.lastName" formControlName="lastName" [ngClass]="{'form-submitted': formSubmitted}" required name="lastName" class="form-control" id="lastName" placeholder="Last Name">
         </div>
       </div>
+
+      <h4>Benefits Itemization</h4>
+      <table class='table table-striped' aria-labelledby="tableLabel">
+      <thead>
+      <tr>
+        <th>Item</th>
+        <th>Cost</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pay Rate</td>
+          <td>2,000</td>
+        </tr>
+        <tr>
+          <td>Gross Cost/Yr</td>
+          <td>{{newEmployee.yearlyBenefitsCost}}</td>
+        </tr>
+        <tr>
+          <td>Employee Discount</td>
+          <td>{{newEmployee.discountApplied ? '10%' : '0%'}}</td>
+        </tr>
+        <tr *ngIf="isMarried">
+          <td>Spouse Gross Cost/Yr</td>
+          <td>{{newEmployee.spouse.yearlyBenefitsCost}}</td>
+        </tr>
+        <tr *ngIf="isMarried">
+          <td>Spouse Discount</td>
+          <td>{{newEmployee.spouse.discountApplied ? '10%' : '0%'}}</td>
+        </tr>
+        <ng-container *ngFor="let dependent of newEmployee.dependents; let i = index">
+          <tr>
+            <td>Dependent {{i + 1}} Gross Cost/Yr</td>
+            <td>{{dependent.yearlyBenefitsCost}}</td>
+          </tr>
+          <tr>
+            <td>Dependent {{i + 1}} Discount</td>
+            <td>{{dependent.discountApplied ? '10%' : '0%'}}</td>
+          </tr>
+        </ng-container>
+        <tr>
+          <td>Net Cost/Yr</td>
+          <td>{{newEmployee.yearlyNetBenefitsCost}}</td>
+      </tr>
+      <tr>
+        <td>Net Cost/Pay Period</td>
+        <td>{{newEmployee.payPeriodNetBenefitsCost}}</td>
+      </tr>
+      </tbody>
+      </table>
+
+
     </div>
     <div class="col-6">
       <h3>Dependent Info</h3>
@@ -79,7 +131,7 @@
           </tbody>
         </table>
       </div>
-      <button type="button" class="btn btn-warning mr-1">Show Costs and Deductions</button>
+      <button type="button" (click)="calculateCostsAndDeductions()" class="btn btn-warning mr-1">Calculate Benefits</button>
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
   </div>

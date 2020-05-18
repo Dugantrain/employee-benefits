@@ -42,7 +42,7 @@ namespace EmployeeBenefits.Controllers
             return existingEmployee;
         }
 
-        [HttpPatch("{id}/benefits-costs")]
+        [HttpPatch("benefits")]
         public Employee ApplyCostsAndDeductions(Employee employee)
         {
             employee = _benefitsCalculatorService.SetEmployeeCostsAndDeductions(employee);

@@ -84,6 +84,13 @@ export class EmployeeCreateComponent implements OnInit {
       });
   }
 
+  public async calculateCostsAndDeductions() {
+    this.employeeService.employeeBenefitsPatch$Json({ body: this.newEmployee })
+      .subscribe((e: Employee) => {
+        this.newEmployee = e;
+      });
+  }
+
   public async addDependent() {
     if (!this.newDependent.firstName || ! this.newDependent.lastName) return;
     this.newEmployee.dependents.push(this.newDependent);
