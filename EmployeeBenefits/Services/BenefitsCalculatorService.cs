@@ -18,7 +18,7 @@ namespace EmployeeBenefits.Services
         public Employee SetEmployeeCostsAndDeductions(Employee employee)
         {
             double yearlyNetBenefitsCost = 0;
-            employee.WeeklyPayRate = BenefitCosts.WeeklyPayRate;
+            employee.WeeklyPayRate = BenefitCosts.PeriodPayRate;
             employee.YearlyPayRate = employee.WeeklyPayRate * BenefitCosts.NumberOfPayPeriods;
             employee.YearlyBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
             ApplyBeneficiaryDiscountIfApplicable(employee);
@@ -60,7 +60,7 @@ namespace EmployeeBenefits.Services
 
     public static class BenefitCosts
     {
-        public static double WeeklyPayRate = 2000;
+        public static double PeriodPayRate = 2000;
         public static double EmployeeBenefitsYearlyBaseCost = 1000;
         public static double DependentBenefitsYearlyBaseCost = 500;
         public static double BeneficiaryYearlyDiscountForLetterA = .1;
