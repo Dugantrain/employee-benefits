@@ -1,14 +1,13 @@
 <h1 id="tableLabel">Add Employee</h1>
 <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
   <div class="row">
-    <div class="col-6">
-      <div class="row">
-        <div class="form-group">
-          <label for="employeeIdentifier">Employee Identifier</label>
-          <input [(ngModel)]="newEmployee.employeeIdentifier" [ngClass]="{'form-submitted': formSubmitted}" formControlName="employeeIdentifier" (focusout)="getEmployeeIdentifierExists()"
-                 class="form-control" id="employeeIdentifier" placeholder="Employee Identifier">
-            <small id="employeeIdHelp" class="form-text text-muted">This value must be unique per employee.</small>
-        </div>
+    <div class="col-6 border-right">
+      <h3>Employee Info</h3>
+      <div class="form-group">
+        <label for="employeeIdentifier">Employee Identifier</label>
+        <input [(ngModel)]="newEmployee.employeeIdentifier" [ngClass]="{'form-submitted': formSubmitted}" formControlName="employeeIdentifier" (focusout)="getEmployeeIdentifierExists()"
+               class="form-control" id="employeeIdentifier" placeholder="Employee Identifier">
+        <small id="employeeIdHelp" class="form-text text-muted">This value must be unique per employee.</small>
       </div>
       <div class="row">
         <div class="form-group col-6">
@@ -20,70 +19,68 @@
           <input [(ngModel)]="newEmployee.lastName" formControlName="lastName" [ngClass]="{'form-submitted': formSubmitted}" required name="lastName" class="form-control" id="lastName" placeholder="Last Name">
         </div>
       </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-
-
     <div class="col-6">
-      <div class="row">
-        <div class="form-check mb-2">
-          <input type="checkbox" [(ngModel)]="isMarried" formControlName="isMarried" class="form-check-input" id="isMarried" name="isMarried">
-          <label class="form-check-label" for="hasSpouse">Married?</label>
+      <h3>Dependent Info</h3>
+      <div class="border-bottom mb-3">
+        <div class="row">
+          <div class="form-check mb-2 ml-3">
+            <input type="checkbox" [(ngModel)]="isMarried" formControlName="isMarried" class="form-check-input" id="isMarried" name="isMarried">
+            <label class="form-check-label" for="hasSpouse">Married?</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-6">
+            <label for="spouseFirstName">Spouse First Name</label>
+            <input [disabled]="true" class="form-control" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseFirstName" [(ngModel)]="newEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
+          </div>
+          <div class="form-group col-6">
+            <label for="spouseLastName">Spouse Last Name</label>
+            <input class="form-control" id="spouseLastName" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseLastName" [(ngModel)]="newEmployee.spouse.lastName" name="spouseLastName" placeholder="Spouse Last Name">
+          </div>
         </div>
       </div>
+      
+
+      <h5>Other Dependents</h5>
       <div class="row">
-        <div class="form-group col-6">
-          <label for="spouseFirstName">Spouse First Name</label>
-          <input [disabled]="true" class="form-control" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseFirstName" [(ngModel)]="newEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
+        <div class="form-group col-5">
+          <label for="newDependentFirstName">First Name</label>
+          <input name="dependentFirstName" [(ngModel)]="newDependent.firstName" formControlName="dependentFirstName" class="form-control" id="newDependentFirstName" placeholder="First Name">
         </div>
-        <div class="form-group col-6">
-          <label for="spouseLastName">Spouse Last Name</label>
-          <input class="form-control" id="spouseLastName" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseLastName" [(ngModel)]="newEmployee.spouse.lastName" name="spouseLastName" placeholder="Spouse Last Name">
+        <div class="form-group col-5">
+          <label for="newDependentLastName">Last Name</label>
+          <input name="dependentLastName" [(ngModel)]="newDependent.lastName" formControlName="dependentLastName" class="form-control" id="newDependentLastName" placeholder="Last Name">
         </div>
+        <div class="form-group col-2" style="align-self: flex-end;">
+          <button type="button" class="btn btn-secondary form-control" (click)="addDependent()">Add</button>
+        </div>
+      </div>
+
+      <div class="row ml-1">
+        <table class='table table-striped' aria-labelledby="tableLabel">
+          <thead>
+          <tr>
+            <th></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let dependent of newEmployee.dependents">
+            <td>{{ dependent.firstName }} {{ dependent.lastName }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-danger float-right" (click)="removeDependent(dependent)">Remove</button>
+            </td>
+          </tr>
+          <tr *ngIf="newEmployee.dependents.length === 0">
+            <td colspan="2" class="text-center">
+              <em>Add any additional dependents above.</em>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <h3>Dependents</h3>
-  </div>
-  <div class="col-6">
-    <div class="row">
-      <div class="form-group col-4">
-        <label for="newDependentFirstName">First Name</label>
-        <input name="dependentFirstName" [(ngModel)]="newDependent.firstName" formControlName="dependentFirstName" class="form-control" id="newDependentFirstName" placeholder="First Name">
-      </div>
-      <div class="form-group col-4">
-        <label for="newDependentLastName">Last Name</label>
-        <input name="dependentLastName" [(ngModel)]="newDependent.lastName" formControlName="dependentLastName" class="form-control" id="newDependentLastName" placeholder="Last Name">
-      </div>
-      <div class="form-group col-1">
-        <button type="button" class="btn btn-secondary" (click)="addDependent()">Add</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-6">
-    <table class='table table-striped' aria-labelledby="tableLabel">
-      <thead>
-        <tr>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let dependent of newEmployee.dependents">
-          <td>{{ dependent.firstName }} {{ dependent.lastName }}</td>
-          <td>
-            <button type="button" class="btn btn-sm btn-danger" (click)="removeDependent(dependent)">Remove</button>
-          </td>
-        </tr>
-        <tr *ngIf="newEmployee.dependents.length === 0">
-          <td colspan="2" class="text-center">
-            <em>There are currently no dependents.</em>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
