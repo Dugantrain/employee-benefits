@@ -13,11 +13,11 @@
       <div class="row">
         <div class="form-group col-6">
           <label for="firstName">First Name</label>
-          <input [(ngModel)]="newEmployee.firstName" formControlName="firstName" required name="firstName" class="form-control" id="firstName" placeholder="First Name">
+          <input [(ngModel)]="newEmployee.firstName" formControlName="firstName" [ngClass]="{'form-submitted': formSubmitted}" required name="firstName" class="form-control" id="firstName" placeholder="First Name">
         </div>
         <div class="form-group col-6">
           <label for="lastName">Last Name</label>
-          <input [(ngModel)]="newEmployee.lastName" formControlName="lastName" required name="lastName" class="form-control" id="lastName" placeholder="Last Name">
+          <input [(ngModel)]="newEmployee.lastName" formControlName="lastName" [ngClass]="{'form-submitted': formSubmitted}" required name="lastName" class="form-control" id="lastName" placeholder="Last Name">
         </div>
       </div>
     </div>
@@ -33,11 +33,11 @@
       <div class="row">
         <div class="form-group col-6">
           <label for="spouseFirstName">Spouse First Name</label>
-          <input [disabled]="true" class="form-control" formControlName="spouseFirstName" [(ngModel)]="newEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
+          <input [disabled]="true" class="form-control" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseFirstName" [(ngModel)]="newEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
         </div>
         <div class="form-group col-6">
           <label for="spouseLastName">Spouse Last Name</label>
-          <input class="form-control" id="spouseLastName" formControlName="spouseLastName" [(ngModel)]="newEmployee.spouse.lastName" name="spouseLastName" placeholder="Spouse Last Name">
+          <input class="form-control" id="spouseLastName" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseLastName" [(ngModel)]="newEmployee.spouse.lastName" name="spouseLastName" placeholder="Spouse Last Name">
         </div>
       </div>
     </div>
@@ -85,5 +85,5 @@
       </tbody>
     </table>
   </div>
-  <button type="submit" [disabled]="!employeeForm.valid" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>

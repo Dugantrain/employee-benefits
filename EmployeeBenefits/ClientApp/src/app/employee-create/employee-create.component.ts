@@ -35,10 +35,27 @@ export class EmployeeCreateComponent implements OnInit {
       dependentFirstName: new FormControl(),
       dependentLastName: new FormControl()
     });
+    this.subscribeIsMarriedOnChange();
   }
 
-  // convenience getter for easy access to form fields
-  get f() { return this.employeeForm.controls; }
+  public subscribeIsMarriedOnChange() {
+    const isMarriedFormControl = this.employeeForm.controls.isMarried;
+    const changes$ = isMarriedFormControl.valueChanges;
+    changes$.subscribe((isMarried: boolean) => {
+      if (isMarried) {
+        this.employeeForm.controls.spouseFirstName.setValidators([Validators.required]);
+        this.employeeForm.controls.spouseLastName.setValidators([Validators.required]);
+      } else {
+        this.employeeForm.controls.spouseFirstName.setValidators(null);
+        this.employeeForm.controls.spouseLastName.setValidators(null);
+      }
+      this.employeeForm.controls.spouseFirstName.updateValueAndValidity();
+      this.employeeForm.controls.spouseLastName.updateValueAndValidity();
+    });
+  }
+
+  //// convenience getter for easy access to form fields
+  //get f() { return this.employeeForm.controls; }
 
   public async onSubmit() {
     this.formSubmitted = true;
