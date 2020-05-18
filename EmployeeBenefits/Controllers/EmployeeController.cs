@@ -35,6 +35,13 @@ namespace EmployeeBenefits.Controllers
             return await _mongoDbEmployeeRepository.GetById(id);
         }
 
+        [HttpGet("employeeIdentifier/{employeeIdentifier}")]
+        public async Task<Employee> GetByEmployeeIdentifier(string employeeIdentifier)
+        {
+            var existingEmployee = await _mongoDbEmployeeRepository.GetByEmployeeIdentifier(employeeIdentifier);
+            return existingEmployee;
+        }
+
         [HttpPatch("{id}/benefits-costs")]
         public Employee ApplyCostsAndDeductions(Employee employee)
         {
@@ -45,6 +52,9 @@ namespace EmployeeBenefits.Controllers
         [HttpPost]
         public async Task<Employee> Create(Employee employee)
         {
+            var existingEmployee = await _mongoDbEmployeeRepository.GetByEmployeeIdentifier(employee.EmployeeIdentifier);
+            if(existingEmployee != null) throw new Exception("Employee Identifier is already taken.");
+
             employee = _benefitsCalculatorService.SetEmployeeCostsAndDeductions(employee);
             var createdEmployee = await _mongoDbEmployeeRepository.Create(employee);
             return createdEmployee;

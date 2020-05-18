@@ -429,6 +429,99 @@ export class EmployeeService extends BaseService {
   }
 
   /**
+   * Path part for operation employeeEmployeeIdentifierEmployeeIdentifierGet
+   */
+  static readonly EmployeeEmployeeIdentifierEmployeeIdentifierGetPath = '/Employee/employeeIdentifier/{employeeIdentifier}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `employeeEmployeeIdentifierEmployeeIdentifierGet$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  employeeEmployeeIdentifierEmployeeIdentifierGet$Plain$Response(params: {
+    employeeIdentifier: null | string;
+
+  }): Observable<StrictHttpResponse<Employee>> {
+
+    const rb = new RequestBuilder(this.rootUrl, EmployeeService.EmployeeEmployeeIdentifierEmployeeIdentifierGetPath, 'get');
+    if (params) {
+
+      rb.path('employeeIdentifier', params.employeeIdentifier, {});
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: 'text/plain'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Employee>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `employeeEmployeeIdentifierEmployeeIdentifierGet$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  employeeEmployeeIdentifierEmployeeIdentifierGet$Plain(params: {
+    employeeIdentifier: null | string;
+
+  }): Observable<Employee> {
+
+    return this.employeeEmployeeIdentifierEmployeeIdentifierGet$Plain$Response(params).pipe(
+      map((r: StrictHttpResponse<Employee>) => r.body as Employee)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `employeeEmployeeIdentifierEmployeeIdentifierGet$Json()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  employeeEmployeeIdentifierEmployeeIdentifierGet$Json$Response(params: {
+    employeeIdentifier: null | string;
+
+  }): Observable<StrictHttpResponse<Employee>> {
+
+    const rb = new RequestBuilder(this.rootUrl, EmployeeService.EmployeeEmployeeIdentifierEmployeeIdentifierGetPath, 'get');
+    if (params) {
+
+      rb.path('employeeIdentifier', params.employeeIdentifier, {});
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'text/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Employee>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `employeeEmployeeIdentifierEmployeeIdentifierGet$Json$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  employeeEmployeeIdentifierEmployeeIdentifierGet$Json(params: {
+    employeeIdentifier: null | string;
+
+  }): Observable<Employee> {
+
+    return this.employeeEmployeeIdentifierEmployeeIdentifierGet$Json$Response(params).pipe(
+      map((r: StrictHttpResponse<Employee>) => r.body as Employee)
+    );
+  }
+
+  /**
    * Path part for operation employeeIdBenefitsCostsPatch
    */
   static readonly EmployeeIdBenefitsCostsPatchPath = '/Employee/{id}/benefits-costs';

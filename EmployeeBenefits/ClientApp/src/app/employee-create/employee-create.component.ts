@@ -3,6 +3,7 @@ import { EmployeeService } from '../api/services/employee.service';
 import { Employee } from '../api/models/employee';
 import { Dependent } from '../api/models/dependent';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, FormControl,Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-create',
@@ -16,13 +17,32 @@ export class EmployeeCreateComponent implements OnInit {
     dependents: <Dependent[]>[]
   };
   public newDependent = <Dependent>{ firstName: "", lastName: "" };
-  constructor(private employeeService: EmployeeService, private router: Router) {
+  public employeeIdentifierExists = false;
+  public employeeForm: FormGroup;
+  public formSubmitted = false;
+
+  constructor(private employeeService: EmployeeService, private router: Router, private formBuilder: FormBuilder) {
   }
 
   async ngOnInit() {
+    this.employeeForm = new FormGroup({
+      employeeIdentifier: new FormControl('',Validators.required),
+      firstName: new FormControl('', Validators.required),
+      lastName: new FormControl('', Validators.required),
+      isMarried: new FormControl(),
+      spouseFirstName: new FormControl(),
+      spouseLastName: new FormControl(),
+      dependentFirstName: new FormControl(),
+      dependentLastName: new FormControl()
+    });
   }
 
+  // convenience getter for easy access to form fields
+  get f() { return this.employeeForm.controls; }
+
   public async onSubmit() {
+    this.formSubmitted = true;
+    if (this.employeeForm.invalid) return;
     if (!this.isMarried) {
       this.newEmployee.spouse = <Dependent>null;
     }
@@ -34,6 +54,17 @@ export class EmployeeCreateComponent implements OnInit {
     }).subscribe((e: Employee) => {
       this.router.navigate(['/list']);
     });
+  }
+
+  public async getEmployeeIdentifierExists() {
+    this.employeeService.employeeEmployeeIdentifierEmployeeIdentifierGet$Json(
+      { employeeIdentifier: this.newEmployee.employeeIdentifier })
+      .subscribe((e: Employee) => {
+        if (e) {
+          this.employeeIdentifierExists = true;
+        }
+        this.employeeIdentifierExists = false;
+      });
   }
 
   public async addDependent() {
