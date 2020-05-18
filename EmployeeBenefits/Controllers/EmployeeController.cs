@@ -14,31 +14,31 @@ namespace EmployeeBenefits.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly IMongoDbEmployeeRepository _mongoDbEmployeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IBenefitsCalculatorService _benefitsCalculatorService;
-        public EmployeeController(IMongoDbEmployeeRepository mongoDbEmployeeRepository, IBenefitsCalculatorService benefitsCalculatorService)
+        public EmployeeController(IEmployeeRepository employeeRepository, IBenefitsCalculatorService benefitsCalculatorService)
         {
-            _mongoDbEmployeeRepository = mongoDbEmployeeRepository;
+            _employeeRepository = employeeRepository;
             _benefitsCalculatorService = benefitsCalculatorService;
         }
 
         [HttpGet]
         public async Task<IEnumerable<Employee>> GetEmployees()
         {
-            var employees = await _mongoDbEmployeeRepository.GetAll();
+            var employees = await _employeeRepository.GetAll();
             return employees;
         }
 
         [HttpGet("{id}")]
         public async Task<Employee> Get(string id)
         {
-            return await _mongoDbEmployeeRepository.GetById(id);
+            return await _employeeRepository.GetById(id);
         }
 
         [HttpGet("employeeIdentifier/{employeeIdentifier}")]
         public async Task<Employee> GetByEmployeeIdentifier(string employeeIdentifier)
         {
-            var existingEmployee = await _mongoDbEmployeeRepository.GetByEmployeeIdentifier(employeeIdentifier);
+            var existingEmployee = await _employeeRepository.GetByEmployeeIdentifier(employeeIdentifier);
             return existingEmployee;
         }
 
@@ -52,11 +52,11 @@ namespace EmployeeBenefits.Controllers
         [HttpPost]
         public async Task<Employee> Create(Employee employee)
         {
-            var existingEmployee = await _mongoDbEmployeeRepository.GetByEmployeeIdentifier(employee.EmployeeIdentifier);
+            var existingEmployee = await _employeeRepository.GetByEmployeeIdentifier(employee.EmployeeIdentifier);
             if(existingEmployee != null) throw new Exception("Employee Identifier is already taken.");
 
             employee = _benefitsCalculatorService.SetEmployeeCostsAndDeductions(employee);
-            var createdEmployee = await _mongoDbEmployeeRepository.Create(employee);
+            var createdEmployee = await _employeeRepository.Create(employee);
             return createdEmployee;
         }
 
@@ -69,7 +69,7 @@ namespace EmployeeBenefits.Controllers
         [HttpDelete]
         public async Task Remove(string id)
         {
-            await _mongoDbEmployeeRepository.DeleteById(id);
+            await _employeeRepository.DeleteById(id);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace EmployeeBenefits
     {
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IMongoDbEmployeeRepository, MongoDbEmployeeRepository>();
+            services.AddSingleton<IEmployeeRepository, MongoDbEmployeeRepository>();
             services.AddSingleton<IBenefitsCalculatorService, BenefitsCalculatorService>();
             services.AddSingleton(GetMongoDatabase());
 

@@ -7,16 +7,7 @@ using MongoDB.Driver;
 
 namespace EmployeeBenefits.Persistence
 {
-    public interface IMongoDbEmployeeRepository
-    {
-        Task<IEnumerable<Employee>> GetAll();
-        Task<Employee> GetById(string id);
-        Task<Employee> GetByEmployeeIdentifier(string employeeIdentifier);
-        Task<Employee> Create(Employee employee);
-        Task DeleteById(string id);
-    }
-
-    public class MongoDbEmployeeRepository  : IMongoDbEmployeeRepository
+    public class MongoDbEmployeeRepository  : IEmployeeRepository
     {
         private readonly IMongoCollection<Employee> _employeeCollection;
 
