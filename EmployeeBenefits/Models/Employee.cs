@@ -15,7 +15,8 @@ namespace EmployeeBenefits.Models
     {
         string FirstName { get; set; }
         string LastName { get; set; }
-        double YearlyBenefitsCost { get; set; }
+        double YearlyBaseBenefitsCost { get; set; }
+        double YearlyNetBenefitsCost { get; set; }
         bool DiscountApplied { get; set; }
     }
 
@@ -23,7 +24,8 @@ namespace EmployeeBenefits.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public double YearlyBenefitsCost { get; set; }
+        public double YearlyBaseBenefitsCost { get; set; }
+        public double YearlyNetBenefitsCost { get; set; }
         public bool DiscountApplied { get; set; }
     }
     public class Employee : IBeneficiary
@@ -33,11 +35,12 @@ namespace EmployeeBenefits.Models
         public string EmployeeIdentifier { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public double WeeklyPayRate { get; set; }
+        public double PeriodPayRate { get; set; }
         public double YearlyPayRate { get; set; }
-        public double YearlyBenefitsCost { get; set; }
-        public bool DiscountApplied { get; set; }
+        public double YearlyBaseBenefitsCost { get; set; }
         public double YearlyNetBenefitsCost { get; set; }
+        public double TotalYearlyNetBenefitsCost { get; set; }
+        public bool DiscountApplied { get; set; }
         public double PayPeriodNetBenefitsCost { get; set; }
 
         public Dependent Spouse { get; set; }

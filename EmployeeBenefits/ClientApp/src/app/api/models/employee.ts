@@ -8,9 +8,10 @@ export interface Employee {
   id?: null | string;
   lastName?: null | string;
   payPeriodNetBenefitsCost?: number;
+  periodPayRate?: number;
   spouse?: Dependent;
-  weeklyPayRate?: number;
-  yearlyBenefitsCost?: number;
+  totalYearlyNetBenefitsCost?: number;
+  yearlyBaseBenefitsCost?: number;
   yearlyNetBenefitsCost?: number;
   yearlyPayRate?: number;
 }

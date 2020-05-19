@@ -17,30 +17,33 @@ namespace EmployeeBenefits.Services
     {
         public Employee SetEmployeeCostsAndDeductions(Employee employee)
         {
-            double yearlyNetBenefitsCost = 0;
-            employee.WeeklyPayRate = BenefitCosts.PeriodPayRate;
-            employee.YearlyPayRate = employee.WeeklyPayRate * BenefitCosts.NumberOfPayPeriods;
-            employee.YearlyBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
+            double totalYearlyNetBenefitsCost = 0;
+            employee.PeriodPayRate = BenefitCosts.PeriodPayRate;
+            employee.YearlyPayRate = employee.PeriodPayRate * BenefitCosts.NumberOfPayPeriods;
+            employee.YearlyBaseBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
+            employee.YearlyNetBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
             ApplyBeneficiaryDiscountIfApplicable(employee);
-            yearlyNetBenefitsCost += employee.YearlyBenefitsCost;
+            totalYearlyNetBenefitsCost += employee.YearlyNetBenefitsCost;
             if (employee.Spouse != null)
             {
-                employee.Spouse.YearlyBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                employee.Spouse.YearlyBaseBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                employee.Spouse.YearlyNetBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
                 ApplyBeneficiaryDiscountIfApplicable(employee.Spouse);
-                yearlyNetBenefitsCost += employee.Spouse.YearlyBenefitsCost;
+                totalYearlyNetBenefitsCost += employee.Spouse.YearlyNetBenefitsCost;
             }
 
             if (employee.Dependents != null)
             {
                 foreach (var dependent in employee.Dependents)
                 {
-                    dependent.YearlyBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                    dependent.YearlyBaseBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                    dependent.YearlyNetBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
                     ApplyBeneficiaryDiscountIfApplicable(dependent);
-                    yearlyNetBenefitsCost += dependent.YearlyBenefitsCost;
+                    totalYearlyNetBenefitsCost += dependent.YearlyNetBenefitsCost;
                 }
             }
-            employee.YearlyNetBenefitsCost = yearlyNetBenefitsCost;
-            employee.PayPeriodNetBenefitsCost = yearlyNetBenefitsCost / BenefitCosts.NumberOfPayPeriods;
+            employee.TotalYearlyNetBenefitsCost = totalYearlyNetBenefitsCost;
+            employee.PayPeriodNetBenefitsCost = totalYearlyNetBenefitsCost / BenefitCosts.NumberOfPayPeriods;
             return employee;
         }
 
@@ -49,7 +52,7 @@ namespace EmployeeBenefits.Services
             if (beneficiary == null) return beneficiary;
             if (string.IsNullOrEmpty(beneficiary.FirstName)) return beneficiary;
             if (!beneficiary.FirstName.ToLower().StartsWith("a")) return beneficiary;
-            beneficiary.YearlyBenefitsCost -= (beneficiary.YearlyBenefitsCost * BenefitCosts.BeneficiaryYearlyDiscountForLetterA);
+            beneficiary.YearlyNetBenefitsCost = beneficiary.YearlyBaseBenefitsCost - (beneficiary.YearlyBaseBenefitsCost * BenefitCosts.BeneficiaryYearlyDiscountForLetterA);
             beneficiary.DiscountApplied = true;
 
             return beneficiary;

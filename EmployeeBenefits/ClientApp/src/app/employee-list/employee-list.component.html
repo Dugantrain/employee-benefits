@@ -28,7 +28,7 @@
           <td>{{ employee.firstName }} {{ employee.lastName }}</td>
           <td>{{ employee.spouse ? 'Y' : 'N' }}</td>
           <td>{{ employee.dependents ? employee.dependents.length : '0' }}</td>
-          <td>{{ employee.yearlyNetBenefitsCost | number:'.2-2' }}</td>
+          <td>{{ employee.totalYearlyNetBenefitsCost | number:'.2-2' }}</td>
           <td>{{ employee.payPeriodNetBenefitsCost | number:'.2-2' }}</td>
           <td>
             <button class="btn btn-sm btn-secondary mr-1" (click)="xxxxxxxxxxx">Update</button>
