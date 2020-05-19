@@ -19,9 +19,22 @@ namespace EmployeeBenefits
     {
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IEmployeeRepository, MongoDbEmployeeRepository>();
+            
             services.AddSingleton<IBenefitsCalculatorService, BenefitsCalculatorService>();
-            services.AddSingleton(GetMongoDatabase(configuration));
+            var useInMemoryPersistence = false;
+            var useInMemoryPersistenceSection = configuration.GetSection("useInMemoryPersistence");
+            if (useInMemoryPersistenceSection != null)
+                useInMemoryPersistence = Convert.ToBoolean(useInMemoryPersistenceSection.Value);
+            if (useInMemoryPersistence)
+            {
+                services.AddSingleton<IEmployeeRepository, InMemoryPersistenceRepository>();
+            }
+            else
+            {
+                services.AddSingleton<IEmployeeRepository, MongoDbEmployeeRepository>();
+                services.AddSingleton(GetMongoDatabase(configuration));
+
+            }
         }
 
         private static IMongoDatabase GetMongoDatabase(IConfiguration configuration)
