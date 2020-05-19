@@ -24,7 +24,8 @@ namespace EmployeeBenefits.Services
             employee.YearlyNetBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
             ApplyBeneficiaryDiscountIfApplicable(employee);
             totalYearlyNetBenefitsCost += employee.YearlyNetBenefitsCost;
-            if (employee.Spouse != null)
+            if (employee.Spouse != null && !string.IsNullOrEmpty(employee.Spouse.FirstName) 
+                                        && !string.IsNullOrEmpty(employee.Spouse.LastName))
             {
                 employee.Spouse.YearlyBaseBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
                 employee.Spouse.YearlyNetBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;

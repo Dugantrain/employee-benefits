@@ -1,5 +1,6 @@
 <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-  <div class="row">
+  <p *ngIf="isLoading"><em>Loading...</em></p>
+  <div *ngIf="!isLoading" class="row">
     <div class="col-6 border-right">
       <div class="row">
         <div class="col-6">
@@ -11,18 +12,18 @@
       </div>
       <div class="form-group">
         <label for="employeeIdentifier">Employee Identifier</label>
-        <input [(ngModel)]="newEmployee.employeeIdentifier" [ngClass]="{'form-submitted': formSubmitted}" formControlName="employeeIdentifier" (focusout)="getEmployeeIdentifierExists()"
+        <input [(ngModel)]="upsertEmployee.employeeIdentifier" [attr.disabled]="isUpdatingExistingEmployee ? 'disabled' : null" [ngClass]="{'form-submitted': formSubmitted}" formControlName="employeeIdentifier" (focusout)="getEmployeeIdentifierExists()"
                class="form-control" id="employeeIdentifier" placeholder="Employee Identifier">
         <small id="employeeIdHelp" class="form-text text-muted">This value must be unique per employee.</small>
       </div>
       <div class="row">
         <div class="form-group col-6">
           <label for="firstName">First Name</label>
-          <input [(ngModel)]="newEmployee.firstName" formControlName="firstName" [ngClass]="{'form-submitted': formSubmitted}" required name="firstName" class="form-control" id="firstName" placeholder="First Name">
+          <input [(ngModel)]="upsertEmployee.firstName" formControlName="firstName" [ngClass]="{'form-submitted': formSubmitted}" required name="firstName" class="form-control" id="firstName" placeholder="First Name">
         </div>
         <div class="form-group col-6">
           <label for="lastName">Last Name</label>
-          <input [(ngModel)]="newEmployee.lastName" formControlName="lastName" [ngClass]="{'form-submitted': formSubmitted}" required name="lastName" class="form-control" id="lastName" placeholder="Last Name">
+          <input [(ngModel)]="upsertEmployee.lastName" formControlName="lastName" [ngClass]="{'form-submitted': formSubmitted}" required name="lastName" class="form-control" id="lastName" placeholder="Last Name">
         </div>
       </div>
 
@@ -39,11 +40,11 @@
         <div class="row">
           <div class="form-group col-6">
             <label for="spouseFirstName">Spouse First Name</label>
-            <input [attr.disabled]="isMarried ? null : 'disabled'" class="form-control" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseFirstName" [(ngModel)]="newEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
+            <input [attr.disabled]="isMarried ? null : 'disabled'" class="form-control" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseFirstName" [(ngModel)]="upsertEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
           </div>
           <div class="form-group col-6">
             <label for="spouseLastName">Spouse Last Name</label>
-            <input [attr.disabled]="isMarried ? null : 'disabled'" class="form-control" id="spouseLastName" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseLastName" [(ngModel)]="newEmployee.spouse.lastName" name="spouseLastName" placeholder="Spouse Last Name">
+            <input [attr.disabled]="isMarried ? null : 'disabled'" class="form-control" id="spouseLastName" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseLastName" [(ngModel)]="upsertEmployee.spouse.lastName" name="spouseLastName" placeholder="Spouse Last Name">
           </div>
         </div>
       </div>
@@ -67,23 +68,23 @@
       <div class="row ml-1">
         <table class='table table-striped' aria-labelledby="tableLabel">
           <thead>
-          <tr>
-            <th></th>
-            <th></th>
-          </tr>
+            <tr>
+              <th></th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let dependent of newEmployee.dependents">
-            <td>{{ dependent.firstName }} {{ dependent.lastName }}</td>
-            <td>
-              <button type="button" class="btn btn-sm btn-danger float-right" (click)="removeDependent(dependent)">Remove</button>
-            </td>
-          </tr>
-          <tr *ngIf="newEmployee.dependents.length === 0">
-            <td colspan="2" class="text-center">
-              <em>Add any additional dependents above.</em>
-            </td>
-          </tr>
+            <tr *ngFor="let dependent of upsertEmployee.dependents">
+              <td>{{ dependent.firstName }} {{ dependent.lastName }}</td>
+              <td>
+                <button type="button" class="btn btn-sm btn-danger float-right" (click)="removeDependent(dependent)">Remove</button>
+              </td>
+            </tr>
+            <tr *ngIf="upsertEmployee.dependents.length === 0">
+              <td colspan="2" class="text-center">
+                <em>Add any additional dependents above.</em>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -92,59 +93,59 @@
       <h4>Benefits Breakdown</h4>
       <table class='table table-bordered table-striped' aria-labelledby="tableLabel">
         <thead>
-        <tr>
-          <th>Item</th>
-          <th>Cost</th>
-        </tr>
+          <tr>
+            <th>Item</th>
+            <th>Cost</th>
+          </tr>
         </thead>
         <tbody>
-        <ng-container *ngIf="scenarioEmployee">
-          <tr>
-            <td>Pay Rate</td>
-            <td>{{scenarioEmployee.periodPayRate | number:'.2-2'}}</td>
-          </tr>
-          <tr>
-            <td>BaseCost/Yr</td>
-            <td>{{scenarioEmployee.yearlyBaseBenefitsCost | number:'.2-2'}}</td>
-          </tr>
-          <tr>
-            <td>Employee Discount</td>
-            <td>{{scenarioEmployee.discountApplied ? '10%' : '0%'}}</td>
-          </tr>
-          <tr *ngIf="isMarried">
-            <td>Spouse BaseCost/Yr</td>
-            <td>{{scenarioEmployee.spouse.yearlyBaseBenefitsCost | number:'.2-2'}}</td>
-          </tr>
-          <tr *ngIf="isMarried">
-            <td>Spouse Discount</td>
-            <td>{{scenarioEmployee.spouse.discountApplied ? '10%' : '0%'}}</td>
-          </tr>
-          <ng-container *ngFor="let dependent of scenarioEmployee.dependents; let i = index">
+          <ng-container *ngIf="scenarioEmployee">
             <tr>
-              <td>Dependent {{i + 1}} BaseCost/Yr</td>
-              <td>{{dependent.yearlyBaseBenefitsCost | number:'.2-2'}}</td>
+              <td>Pay Rate</td>
+              <td>{{scenarioEmployee.periodPayRate | number:'.2-2'}}</td>
             </tr>
             <tr>
-              <td>Dependent {{i + 1}} Discount</td>
-              <td>{{dependent.discountApplied ? '10%' : '0%'}}</td>
+              <td>Base Cost/Yr</td>
+              <td>{{scenarioEmployee.yearlyBaseBenefitsCost | number:'.2-2'}}</td>
+            </tr>
+            <tr>
+              <td>Employee Discount</td>
+              <td>{{scenarioEmployee.discountApplied ? '10%' : '0%'}}</td>
+            </tr>
+            <tr *ngIf="isMarried">
+              <td>Spouse Base Cost/Yr</td>
+              <td>{{scenarioEmployee.spouse.yearlyBaseBenefitsCost | number:'.2-2'}}</td>
+            </tr>
+            <tr *ngIf="isMarried">
+              <td>Spouse Discount</td>
+              <td>{{scenarioEmployee.spouse.discountApplied ? '10%' : '0%'}}</td>
+            </tr>
+            <ng-container *ngFor="let dependent of scenarioEmployee.dependents; let i = index">
+              <tr>
+                <td>Dependent {{i + 1}} Base Cost/Yr</td>
+                <td>{{dependent.yearlyBaseBenefitsCost | number:'.2-2'}}</td>
+              </tr>
+              <tr>
+                <td>Dependent {{i + 1}} Discount</td>
+                <td>{{dependent.discountApplied ? '10%' : '0%'}}</td>
+              </tr>
+            </ng-container>
+            <tr class="bg-warning">
+              <td><strong>Net Cost/Yr</strong></td>
+              <td><strong>{{scenarioEmployee.totalYearlyNetBenefitsCost | number:'.2-2'}}</strong></td>
+            </tr>
+            <tr class="bg-success">
+              <td><strong>Net Cost/Pay Period</strong></td>
+              <td><strong>{{scenarioEmployee.payPeriodNetBenefitsCost | number:'.2-2'}}</strong></td>
             </tr>
           </ng-container>
-          <tr>
-            <td>Net Cost/Yr</td>
-            <td>{{scenarioEmployee.totalYearlyNetBenefitsCost | number:'.2-2'}}</td>
-          </tr>
-          <tr>
-            <td>Net Cost/Pay Period</td>
-            <td>{{scenarioEmployee.payPeriodNetBenefitsCost | number:'.2-2'}}</td>
-          </tr>
-        </ng-container>
-        <ng-container *ngIf="!scenarioEmployee">
-          <tr>
-            <td colspan="2" class="text-center">
-              <em>Complete all required fields.</em>
-            </td>
-          </tr>
-        </ng-container>
+          <ng-container *ngIf="!scenarioEmployee">
+            <tr>
+              <td colspan="2" class="text-center">
+                <em>Complete all required fields.</em>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>

@@ -50,20 +50,17 @@ namespace EmployeeBenefits.Controllers
         }
 
         [HttpPost]
-        public async Task<Employee> Create(Employee employee)
+        public async Task<Employee> Upsert(Employee employee)
         {
-            var existingEmployee = await _employeeRepository.GetByEmployeeIdentifier(employee.EmployeeIdentifier);
-            if(existingEmployee != null) throw new Exception("Employee Identifier is already taken.");
+            if (string.IsNullOrEmpty(employee.Id))
+            {
+                var existingEmployee = await _employeeRepository.GetByEmployeeIdentifier(employee.EmployeeIdentifier);
+                if (existingEmployee != null) throw new Exception("Employee Identifier is already taken.");
+            }
 
             employee = _benefitsCalculatorService.SetEmployeeCostsAndDeductions(employee);
-            var createdEmployee = await _employeeRepository.Create(employee);
+            var createdEmployee = await _employeeRepository.Upsert(employee);
             return createdEmployee;
-        }
-
-        [HttpPatch]
-        public async Task<Employee> Change(Employee employee)
-        {
-            return new Employee();
         }
 
         [HttpDelete]

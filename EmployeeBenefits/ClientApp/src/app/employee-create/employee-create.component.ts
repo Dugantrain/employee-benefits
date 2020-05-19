@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { EmployeeService } from '../api/services/employee.service';
 import { Employee } from '../api/models/employee';
 import { Dependent } from '../api/models/dependent';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormControl,Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl,Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-create',
@@ -11,8 +11,9 @@ import { FormBuilder, FormGroup, FormControl,Validators } from '@angular/forms';
   styleUrls: ['./employee-create.component.css']
 })
 export class EmployeeCreateComponent implements OnInit {
+  public isLoading = false;
   public isMarried = false;
-  public newEmployee: Employee = <Employee>{
+  public upsertEmployee: Employee = <Employee>{
     spouse: <Dependent>{},
     dependents: <Dependent[]>[]
   };
@@ -21,11 +22,13 @@ export class EmployeeCreateComponent implements OnInit {
   public employeeIdentifierExists = false;
   public employeeForm: FormGroup;
   public formSubmitted = false;
+  public isUpdatingExistingEmployee = false;
 
-  constructor(private employeeService: EmployeeService, private router: Router, private formBuilder: FormBuilder) {
+  constructor(private employeeService: EmployeeService, private router: Router, private route: ActivatedRoute) {
   }
 
   async ngOnInit() {
+    this.isLoading = true;
     this.employeeForm = new FormGroup({
       employeeIdentifier: new FormControl('',Validators.required),
       firstName: new FormControl('', Validators.required),
@@ -38,6 +41,33 @@ export class EmployeeCreateComponent implements OnInit {
     });
     this.subscribeIsMarriedOnChange();
     this.subscribeOnFormChange();
+    this.determineCreateOrUpdateBasedOnRoute();
+  }
+
+  public determineCreateOrUpdateBasedOnRoute() {
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        this.isUpdatingExistingEmployee = true;
+        this.employeeService.employeeIdGet$Json({ id: id }).subscribe((e) => {
+          this.upsertEmployee = e;
+          if (this.upsertEmployee.spouse) {
+            this.isMarried = true;
+          } else {
+            this.upsertEmployee.spouse = <Dependent>{};
+          }
+          if (!this.upsertEmployee.dependents) {
+            this.upsertEmployee.dependents = <Dependent[]>[];
+          }
+        });
+      } else {
+        this.upsertEmployee = <Employee>{
+          spouse: <Dependent>{},
+          dependents: <Dependent[]>[]
+        };
+      }
+      this.isLoading = false;
+    });
   }
 
   public subscribeIsMarriedOnChange() {
@@ -70,13 +100,13 @@ export class EmployeeCreateComponent implements OnInit {
     this.formSubmitted = true;
     if (this.employeeForm.invalid) return;
     if (!this.isMarried) {
-      this.newEmployee.spouse = <Dependent>null;
+      this.upsertEmployee.spouse = <Dependent>null;
     }
-    if (this.newEmployee.dependents !== null && this.newEmployee.dependents.length === 0) {
-      this.newEmployee.dependents = <Dependent[]>null;
+    if (this.upsertEmployee.dependents !== null && this.upsertEmployee.dependents.length === 0) {
+      this.upsertEmployee.dependents = <Dependent[]>null;
     };
     this.employeeService.employeePost$Json({
-      body: this.newEmployee
+      body: this.upsertEmployee
     }).subscribe((e: Employee) => {
       this.router.navigate(['/list']);
     });
@@ -84,7 +114,7 @@ export class EmployeeCreateComponent implements OnInit {
 
   public async getEmployeeIdentifierExists() {
     this.employeeService.employeeEmployeeIdentifierEmployeeIdentifierGet$Json(
-      { employeeIdentifier: this.newEmployee.employeeIdentifier })
+      { employeeIdentifier: this.upsertEmployee.employeeIdentifier })
       .subscribe((e: Employee) => {
         if (e) {
           this.employeeIdentifierExists = true;
@@ -94,7 +124,7 @@ export class EmployeeCreateComponent implements OnInit {
   }
 
   public async calculateCostsAndDeductions() {
-    this.employeeService.employeeBenefitsPatch$Json({ body: this.newEmployee })
+    this.employeeService.employeeBenefitsPatch$Json({ body: this.upsertEmployee })
       .subscribe((e: Employee) => {
         this.scenarioEmployee = e;
       });
@@ -103,10 +133,10 @@ export class EmployeeCreateComponent implements OnInit {
   public async addDependent() {
     if (!this.newDependent.firstName || this.newDependent.firstName.trim() === ""
       || !this.newDependent.lastName || this.newDependent.lastName.trim() === "") return;
-    let existingDependent = this.newEmployee.dependents.find((d: Dependent) => d.firstName.toLowerCase() === this.newDependent.firstName.toLowerCase() &&
+    let existingDependent = this.upsertEmployee.dependents.find((d: Dependent) => d.firstName.toLowerCase() === this.newDependent.firstName.toLowerCase() &&
       d.lastName.toLowerCase() === this.newDependent.lastName.toLowerCase());
     if (existingDependent) return;
-    this.newEmployee.dependents.push(this.newDependent);
+    this.upsertEmployee.dependents.push(this.newDependent);
     this.newDependent = <Dependent>{ firstName: "", lastName: "" };
     if (this.employeeForm.valid) {
       this.calculateCostsAndDeductions();
@@ -114,7 +144,7 @@ export class EmployeeCreateComponent implements OnInit {
   }
 
   public async removeDependent(dependent: Dependent) {
-    this.newEmployee.dependents = this.newEmployee.dependents.filter((d: Dependent) => !(d.firstName === dependent.firstName &&
+    this.upsertEmployee.dependents = this.upsertEmployee.dependents.filter((d: Dependent) => !(d.firstName === dependent.firstName &&
       d.lastName === dependent.lastName));
     if (this.employeeForm.valid) {
       this.calculateCostsAndDeductions();

@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { ActivatedRoute } from '@angular/router';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
@@ -27,6 +28,7 @@ import { EmployeeCreateComponent } from './employee-create/employee-create.compo
       { path: '', component: EmployeeListComponent, pathMatch: 'full' },
       { path: 'list', component: EmployeeListComponent },
       { path: 'create', component: EmployeeCreateComponent },
+      { path: 'create/:id', component: EmployeeCreateComponent }
     ])
   ],
   providers: [],

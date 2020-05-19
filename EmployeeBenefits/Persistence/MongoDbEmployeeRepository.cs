@@ -17,12 +17,20 @@ namespace EmployeeBenefits.Persistence
             _employeeCollection = database.GetCollection<Employee>("employees");
         }
 
-        public async Task<Employee> Create(Employee employee)
+        public async Task<Employee> Upsert(Employee employee)
         {
             try
             {
                 if (employee == null) throw new ArgumentNullException(nameof(employee));
-                await _employeeCollection.InsertOneAsync(employee, new InsertOneOptions());
+                if (string.IsNullOrEmpty(employee.Id))
+                {
+                    await _employeeCollection.InsertOneAsync(employee, new InsertOneOptions());
+                }
+                else
+                {
+                    var filter = Builders<Employee>.Filter.Eq(x => x.Id, employee.Id);
+                    await _employeeCollection.ReplaceOneAsync(filter, employee);
+                }
                 return employee;
             }
             catch (Exception e)
