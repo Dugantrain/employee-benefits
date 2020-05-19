@@ -46,14 +46,14 @@ namespace EmployeeBenefits.Services
 
         private IBeneficiary ApplyBeneficiaryDiscountIfApplicable(IBeneficiary beneficiary)
         {
-            if (beneficiary.FirstName.ToLower().StartsWith("a"))
-            {
-                beneficiary.YearlyBenefitsCost -= (beneficiary.YearlyBenefitsCost * BenefitCosts.BeneficiaryYearlyDiscountForLetterA);
-                beneficiary.DiscountApplied = true;
-            }
+            if (beneficiary == null) return beneficiary;
+            if (string.IsNullOrEmpty(beneficiary.FirstName)) return beneficiary;
+            if (!beneficiary.FirstName.ToLower().StartsWith("a")) return beneficiary;
+            beneficiary.YearlyBenefitsCost -= (beneficiary.YearlyBenefitsCost * BenefitCosts.BeneficiaryYearlyDiscountForLetterA);
+            beneficiary.DiscountApplied = true;
+
             return beneficiary;
         }
-
     }
 
     

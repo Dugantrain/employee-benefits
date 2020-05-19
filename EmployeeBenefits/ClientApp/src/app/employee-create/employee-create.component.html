@@ -1,7 +1,14 @@
 <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
   <div class="row">
     <div class="col-6 border-right">
-      <h3>Employee Info</h3>
+      <div class="row">
+        <div class="col-6">
+          <h3>Employee Info</h3>
+        </div>
+        <div class="col-6">
+          <button type="submit" [attr.disabled]="employeeForm.invalid ? 'disabled' : null" class="btn btn-primary float-right">Save All</button>
+        </div>
+      </div>
       <div class="form-group">
         <label for="employeeIdentifier">Employee Identifier</label>
         <input [(ngModel)]="newEmployee.employeeIdentifier" [ngClass]="{'form-submitted': formSubmitted}" formControlName="employeeIdentifier" (focusout)="getEmployeeIdentifierExists()"
@@ -19,60 +26,9 @@
         </div>
       </div>
 
-      <h4>Benefits Itemization</h4>
-      <table class='table table-striped' aria-labelledby="tableLabel">
-      <thead>
-      <tr>
-        <th>Item</th>
-        <th>Cost</th>
-      </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Pay Rate</td>
-          <td>2,000</td>
-        </tr>
-        <tr>
-          <td>Gross Cost/Yr</td>
-          <td>{{newEmployee.yearlyBenefitsCost}}</td>
-        </tr>
-        <tr>
-          <td>Employee Discount</td>
-          <td>{{newEmployee.discountApplied ? '10%' : '0%'}}</td>
-        </tr>
-        <tr *ngIf="isMarried">
-          <td>Spouse Gross Cost/Yr</td>
-          <td>{{newEmployee.spouse.yearlyBenefitsCost}}</td>
-        </tr>
-        <tr *ngIf="isMarried">
-          <td>Spouse Discount</td>
-          <td>{{newEmployee.spouse.discountApplied ? '10%' : '0%'}}</td>
-        </tr>
-        <ng-container *ngFor="let dependent of newEmployee.dependents; let i = index">
-          <tr>
-            <td>Dependent {{i + 1}} Gross Cost/Yr</td>
-            <td>{{dependent.yearlyBenefitsCost}}</td>
-          </tr>
-          <tr>
-            <td>Dependent {{i + 1}} Discount</td>
-            <td>{{dependent.discountApplied ? '10%' : '0%'}}</td>
-          </tr>
-        </ng-container>
-        <tr>
-          <td>Net Cost/Yr</td>
-          <td>{{newEmployee.yearlyNetBenefitsCost}}</td>
-      </tr>
-      <tr>
-        <td>Net Cost/Pay Period</td>
-        <td>{{newEmployee.payPeriodNetBenefitsCost}}</td>
-      </tr>
-      </tbody>
-      </table>
 
 
-    </div>
-    <div class="col-6">
-      <h3>Dependent Info</h3>
+      <h4>Dependent Info</h4>
       <div class="border-bottom mb-3">
         <div class="row">
           <div class="form-check mb-2 ml-3">
@@ -111,28 +67,86 @@
       <div class="row ml-1">
         <table class='table table-striped' aria-labelledby="tableLabel">
           <thead>
-            <tr>
-              <th></th>
-              <th></th>
-            </tr>
+          <tr>
+            <th></th>
+            <th></th>
+          </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let dependent of newEmployee.dependents">
-              <td>{{ dependent.firstName }} {{ dependent.lastName }}</td>
-              <td>
-                <button type="button" class="btn btn-sm btn-danger float-right" (click)="removeDependent(dependent)">Remove</button>
-              </td>
-            </tr>
-            <tr *ngIf="newEmployee.dependents.length === 0">
-              <td colspan="2" class="text-center">
-                <em>Add any additional dependents above.</em>
-              </td>
-            </tr>
+          <tr *ngFor="let dependent of newEmployee.dependents">
+            <td>{{ dependent.firstName }} {{ dependent.lastName }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-danger float-right" (click)="removeDependent(dependent)">Remove</button>
+            </td>
+          </tr>
+          <tr *ngIf="newEmployee.dependents.length === 0">
+            <td colspan="2" class="text-center">
+              <em>Add any additional dependents above.</em>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
-      <button type="button" (click)="calculateCostsAndDeductions()" class="btn btn-warning mr-1">Calculate Benefits</button>
-      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    <div class="col-6">
+      <h4>Benefits Breakdown</h4>
+      <table class='table table-bordered table-striped' aria-labelledby="tableLabel">
+        <thead>
+        <tr>
+          <th>Item</th>
+          <th>Cost</th>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngIf="scenarioEmployee">
+          <tr>
+            <td>Pay Rate</td>
+            <td>{{scenarioEmployee.weeklyPayRate | number:'.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>Gross Cost/Yr</td>
+            <td>{{scenarioEmployee.yearlyBenefitsCost | number:'.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>Employee Discount</td>
+            <td>{{scenarioEmployee.discountApplied ? '10%' : '0%'}}</td>
+          </tr>
+          <tr *ngIf="isMarried">
+            <td>Spouse Gross Cost/Yr</td>
+            <td>{{scenarioEmployee.spouse.yearlyBenefitsCost | number:'.2-2'}}</td>
+          </tr>
+          <tr *ngIf="isMarried">
+            <td>Spouse Discount</td>
+            <td>{{scenarioEmployee.spouse.discountApplied ? '10%' : '0%'}}</td>
+          </tr>
+          <ng-container *ngFor="let dependent of scenarioEmployee.dependents; let i = index">
+            <tr>
+              <td>Dependent {{i + 1}} Gross Cost/Yr</td>
+              <td>{{dependent.yearlyBenefitsCost | number:'.2-2'}}</td>
+            </tr>
+            <tr>
+              <td>Dependent {{i + 1}} Discount</td>
+              <td>{{dependent.discountApplied ? '10%' : '0%'}}</td>
+            </tr>
+          </ng-container>
+          <tr>
+            <td>Net Cost/Yr</td>
+            <td>{{scenarioEmployee.yearlyNetBenefitsCost | number:'.2-2'}}</td>
+          </tr>
+          <tr>
+            <td>Net Cost/Pay Period</td>
+            <td>{{scenarioEmployee.payPeriodNetBenefitsCost | number:'.2-2'}}</td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="!scenarioEmployee">
+          <tr>
+            <td colspan="2" class="text-center">
+              <em>Complete all required fields.</em>
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
     </div>
   </div>
 </form>

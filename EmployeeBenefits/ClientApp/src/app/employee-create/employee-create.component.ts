@@ -16,6 +16,7 @@ export class EmployeeCreateComponent implements OnInit {
     spouse: <Dependent>{},
     dependents: <Dependent[]>[]
   };
+  public scenarioEmployee: Employee;
   public newDependent = <Dependent>{ firstName: "", lastName: "" };
   public employeeIdentifierExists = false;
   public employeeForm: FormGroup;
@@ -36,6 +37,7 @@ export class EmployeeCreateComponent implements OnInit {
       dependentLastName: new FormControl()
     });
     this.subscribeIsMarriedOnChange();
+    this.subscribeOnFormChange();
   }
 
   public subscribeIsMarriedOnChange() {
@@ -54,8 +56,15 @@ export class EmployeeCreateComponent implements OnInit {
     });
   }
 
-  //// convenience getter for easy access to form fields
-  //get f() { return this.employeeForm.controls; }
+  public subscribeOnFormChange() {
+    this.employeeForm.valueChanges.subscribe((val) => {
+      if (this.employeeForm.valid) {
+        this.calculateCostsAndDeductions();
+      } else {
+        this.scenarioEmployee = <Employee>null;
+      }
+    });
+  }
 
   public async onSubmit() {
     this.formSubmitted = true;
@@ -87,18 +96,24 @@ export class EmployeeCreateComponent implements OnInit {
   public async calculateCostsAndDeductions() {
     this.employeeService.employeeBenefitsPatch$Json({ body: this.newEmployee })
       .subscribe((e: Employee) => {
-        this.newEmployee = e;
+        this.scenarioEmployee = e;
       });
   }
 
   public async addDependent() {
     if (!this.newDependent.firstName || ! this.newDependent.lastName) return;
     this.newEmployee.dependents.push(this.newDependent);
-    this.newDependent = <Dependent>{firstName: "", lastName: ""};
+    this.newDependent = <Dependent>{ firstName: "", lastName: "" };
+    if (this.employeeForm.valid) {
+      this.calculateCostsAndDeductions();
+    }
   }
 
   public async removeDependent(dependent: Dependent) {
     this.newEmployee.dependents = this.newEmployee.dependents.filter((d: Dependent) => !(d.firstName === dependent.firstName &&
       d.lastName === dependent.lastName));
+    if (this.employeeForm.valid) {
+      this.calculateCostsAndDeductions();
+    }
   }
 }
