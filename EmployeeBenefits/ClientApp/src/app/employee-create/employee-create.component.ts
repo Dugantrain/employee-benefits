@@ -40,7 +40,6 @@ export class EmployeeCreateComponent implements OnInit {
       dependentLastName: new FormControl()
     });
     this.subscribeIsMarriedOnChange();
-    this.subscribeOnFormChange();
     this.determineCreateOrUpdateBasedOnRoute();
   }
 
@@ -59,6 +58,7 @@ export class EmployeeCreateComponent implements OnInit {
           if (!this.upsertEmployee.dependents) {
             this.upsertEmployee.dependents = <Dependent[]>[];
           }
+          this.scenarioEmployee = this.upsertEmployee;
         });
       } else {
         this.upsertEmployee = <Employee>{
@@ -86,14 +86,15 @@ export class EmployeeCreateComponent implements OnInit {
     });
   }
 
-  public subscribeOnFormChange() {
-    this.employeeForm.valueChanges.subscribe((val) => {
-      if (this.employeeForm.valid) {
-        this.calculateCostsAndDeductions();
-      } else {
-        this.scenarioEmployee = <Employee>null;
-      }
-    });
+  public calculateCostsAndDeductionsIfFieldsValid() {
+    if (this.employeeForm.controls.firstName.valid &&
+      (
+        !this.isMarried ||
+        (this.isMarried &&
+        this.employeeForm.controls.spouseFirstName.valid))
+    ) {
+      this.calculateCostsAndDeductions();
+    }
   }
 
   public async onSubmit() {
@@ -126,13 +127,6 @@ export class EmployeeCreateComponent implements OnInit {
       });
   }
 
-  public async calculateCostsAndDeductions() {
-    this.employeeService.employeeBenefitsPatch$Json({ body: this.upsertEmployee })
-      .subscribe((e: Employee) => {
-        this.scenarioEmployee = e;
-      });
-  }
-
   public async addDependent() {
     if (!this.newDependent.firstName || this.newDependent.firstName.trim() === ""
       || !this.newDependent.lastName || this.newDependent.lastName.trim() === "") return;
@@ -141,16 +135,19 @@ export class EmployeeCreateComponent implements OnInit {
     if (existingDependent) return;
     this.upsertEmployee.dependents.push(this.newDependent);
     this.newDependent = <Dependent>{ firstName: "", lastName: "" };
-    if (this.employeeForm.valid) {
-      this.calculateCostsAndDeductions();
-    }
+    this.calculateCostsAndDeductionsIfFieldsValid();
   }
 
   public async removeDependent(dependent: Dependent) {
     this.upsertEmployee.dependents = this.upsertEmployee.dependents.filter((d: Dependent) => !(d.firstName === dependent.firstName &&
       d.lastName === dependent.lastName));
-    if (this.employeeForm.valid) {
-      this.calculateCostsAndDeductions();
-    }
+    this.calculateCostsAndDeductionsIfFieldsValid();
+  }
+
+  private async calculateCostsAndDeductions() {
+    this.employeeService.employeeBenefitsPatch$Json({ body: this.upsertEmployee })
+      .subscribe((e: Employee) => {
+        this.scenarioEmployee = e;
+      });
   }
 }

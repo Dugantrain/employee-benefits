@@ -20,7 +20,7 @@
       <div class="row">
         <div class="form-group col-6">
           <label for="firstName">First Name</label>
-          <input [(ngModel)]="upsertEmployee.firstName" formControlName="firstName" [ngClass]="{'form-submitted': formSubmitted}" required name="firstName" class="form-control" id="firstName" placeholder="First Name">
+          <input (focusout)="calculateCostsAndDeductionsIfFieldsValid()" [(ngModel)]="upsertEmployee.firstName" formControlName="firstName" [ngClass]="{'form-submitted': formSubmitted}" required name="firstName" class="form-control" id="firstName" placeholder="First Name">
         </div>
         <div class="form-group col-6">
           <label for="lastName">Last Name</label>
@@ -41,7 +41,7 @@
         <div class="row">
           <div class="form-group col-6">
             <label for="spouseFirstName">Spouse First Name</label>
-            <input [attr.disabled]="isMarried ? null : 'disabled'" class="form-control" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseFirstName" [(ngModel)]="upsertEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
+            <input (focusout)="calculateCostsAndDeductionsIfFieldsValid()" [attr.disabled]="isMarried ? null : 'disabled'" class="form-control" [ngClass]="{'form-submitted': formSubmitted}" formControlName="spouseFirstName" [(ngModel)]="upsertEmployee.spouse.firstName" id="spouseFirstName" name="spouseFirstName" placeholder="Spouse First Name">
           </div>
           <div class="form-group col-6">
             <label for="spouseLastName">Spouse Last Name</label>
@@ -102,16 +102,20 @@
         <tbody>
           <ng-container *ngIf="scenarioEmployee">
             <tr>
-              <td>Pay Rate</td>
+              <td>Employee Pay Rate</td>
               <td>{{scenarioEmployee.periodPayRate | number:'.2-2'}}</td>
             </tr>
             <tr>
-              <td>Base Cost/Yr</td>
+              <td>Employee Base Cost/Yr</td>
               <td>{{scenarioEmployee.yearlyBaseBenefitsCost | number:'.2-2'}}</td>
             </tr>
             <tr>
               <td>Employee Discount</td>
               <td>{{scenarioEmployee.discountApplied ? '10%' : '0%'}}</td>
+            </tr>
+            <tr class="bg-warning">
+              <td><strong>Employee Net Cost/Yr</strong></td>
+              <td><strong>{{scenarioEmployee.yearlyNetBenefitsCost | number:'.2-2'}}</strong></td>
             </tr>
             <tr *ngIf="isMarried">
               <td>Spouse Base Cost/Yr</td>
@@ -120,6 +124,10 @@
             <tr *ngIf="isMarried">
               <td>Spouse Discount</td>
               <td>{{scenarioEmployee.spouse.discountApplied ? '10%' : '0%'}}</td>
+            </tr>
+            <tr *ngIf="isMarried" class="bg-warning">
+              <td><strong>Spouse Net Cost/Yr</strong></td>
+              <td><strong>{{scenarioEmployee.spouse.yearlyNetBenefitsCost | number:'.2-2'}}</strong></td>
             </tr>
             <ng-container *ngFor="let dependent of scenarioEmployee.dependents; let i = index">
               <tr>
@@ -130,8 +138,12 @@
                 <td>Dependent {{i + 1}} Discount</td>
                 <td>{{dependent.discountApplied ? '10%' : '0%'}}</td>
               </tr>
+              <tr class="bg-warning">
+                <td><strong>Dependent {{i + 1}} Net Cost/Yr</strong></td>
+                <td><strong>{{dependent.yearlyNetBenefitsCost | number:'.2-2'}}</strong></td>
+              </tr>
             </ng-container>
-            <tr class="bg-warning">
+            <tr class="bg-success">
               <td><strong>Net Cost/Yr</strong></td>
               <td><strong>{{scenarioEmployee.totalYearlyNetBenefitsCost | number:'.2-2'}}</strong></td>
             </tr>
