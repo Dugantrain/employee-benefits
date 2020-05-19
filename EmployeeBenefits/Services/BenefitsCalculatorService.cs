@@ -22,12 +22,14 @@ namespace EmployeeBenefits.Services
             employee.YearlyPayRate = employee.PeriodPayRate * BenefitCosts.NumberOfPayPeriods;
             employee.YearlyBaseBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
             employee.YearlyNetBenefitsCost = BenefitCosts.EmployeeBenefitsYearlyBaseCost;
+            employee.DiscountApplied = false;
             ApplyBeneficiaryDiscountIfApplicable(employee);
             totalYearlyNetBenefitsCost += employee.YearlyNetBenefitsCost;
             if (employee.Spouse != null && !string.IsNullOrEmpty(employee.Spouse.FirstName))
             {
                 employee.Spouse.YearlyBaseBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
                 employee.Spouse.YearlyNetBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                employee.Spouse.DiscountApplied = false;
                 ApplyBeneficiaryDiscountIfApplicable(employee.Spouse);
                 totalYearlyNetBenefitsCost += employee.Spouse.YearlyNetBenefitsCost;
             }
@@ -38,6 +40,7 @@ namespace EmployeeBenefits.Services
                 {
                     dependent.YearlyBaseBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
                     dependent.YearlyNetBenefitsCost = BenefitCosts.DependentBenefitsYearlyBaseCost;
+                    dependent.DiscountApplied = false;
                     ApplyBeneficiaryDiscountIfApplicable(dependent);
                     totalYearlyNetBenefitsCost += dependent.YearlyNetBenefitsCost;
                 }
