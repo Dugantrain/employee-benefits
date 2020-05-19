@@ -59,7 +59,7 @@ namespace EmployeeBenefits.Tests.Unit
             employee.FirstName = "Dave";
             var sut = new BenefitsCalculatorService();
             employee = sut.SetEmployeeCostsAndDeductions(employee);
-            Assert.Equal(employee.YearlyNetBenefitsCost,
+            Assert.Equal(employee.TotalYearlyNetBenefitsCost,
                 BenefitCosts.EmployeeBenefitsYearlyBaseCost + BenefitCosts.DependentBenefitsYearlyBaseCost);
         }
 
@@ -84,7 +84,7 @@ namespace EmployeeBenefits.Tests.Unit
             employee.FirstName = "Dave";
             var sut = new BenefitsCalculatorService();
             employee = sut.SetEmployeeCostsAndDeductions(employee);
-            Assert.Equal(employee.YearlyNetBenefitsCost,
+            Assert.Equal(employee.TotalYearlyNetBenefitsCost,
                 BenefitCosts.EmployeeBenefitsYearlyBaseCost + (BenefitCosts.DependentBenefitsYearlyBaseCost*2));
         }
 
@@ -105,7 +105,7 @@ namespace EmployeeBenefits.Tests.Unit
             employee.FirstName = "Dave";
             var sut = new BenefitsCalculatorService();
             employee = sut.SetEmployeeCostsAndDeductions(employee);
-            Assert.Equal(employee.YearlyNetBenefitsCost,
+            Assert.Equal(employee.TotalYearlyNetBenefitsCost,
                 BenefitCosts.EmployeeBenefitsYearlyBaseCost + (BenefitCosts.DependentBenefitsYearlyBaseCost * (1-BenefitCosts.BeneficiaryYearlyDiscountForLetterA)));
         }
     }
