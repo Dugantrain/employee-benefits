@@ -52,6 +52,17 @@ namespace EmployeeBenefits.Controllers
         [HttpPost]
         public async Task<Employee> Upsert(Employee employee)
         {
+            if (string.IsNullOrEmpty(employee.FirstName) || string.IsNullOrEmpty(employee.LastName) ||
+                (employee.Spouse != null &&
+                 (string.IsNullOrEmpty(employee.Spouse.FirstName) || string.IsNullOrEmpty(employee.Spouse.LastName))) ||
+                (employee.Dependents != null &&
+                 (employee.Dependents.Any(d => string.IsNullOrEmpty(d.FirstName) || employee.Dependents.Any(d => string.IsNullOrEmpty(d.LastName))))
+                )
+            )
+            {
+                throw new Exception("Employee Info incomplete.");
+            }
+
             if (string.IsNullOrEmpty(employee.Id))
             {
                 var existingEmployee = await _employeeRepository.GetByEmployeeIdentifier(employee.EmployeeIdentifier);
