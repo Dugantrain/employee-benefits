@@ -21,7 +21,12 @@ namespace EmployeeBenefits
         {
             services.AddSingleton<IEmployeeRepository, MongoDbEmployeeRepository>();
             services.AddSingleton<IBenefitsCalculatorService, BenefitsCalculatorService>();
-            services.AddSingleton(GetMongoDatabase());
+            services.AddSingleton(GetMongoDatabase(configuration));
+        }
+
+        private static IMongoDatabase GetMongoDatabase(IConfiguration configuration)
+        {
+            var mongoConnectionString = configuration.GetSection("mongoConnectionString").Value;
 
             BsonClassMap.RegisterClassMap<Employee>(cm =>
             {
@@ -30,14 +35,8 @@ namespace EmployeeBenefits
                     .SetIdGenerator(StringObjectIdGenerator.Instance)
                     .SetSerializer(new StringSerializer(BsonType.ObjectId));
             });
-        }
-
-        private static IMongoDatabase GetMongoDatabase()
-        {
-            var mongoConnection = "mongodb://employee-benefits-app-user:odGLjzZgz3TxaeLU@cluster0-shard-00-01-z7xz4.azure.mongodb.net:27017,cluster0-shard-00-02-z7xz4.azure.mongodb.net:27017,cluster0-shard-00-00-z7xz4.azure.mongodb.net:27017/employee-benefits?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true";
-
-            var mongoClient = new MongoClient(mongoConnection);
-            var databaseName = new MongoUrlBuilder(mongoConnection).DatabaseName;
+            var mongoClient = new MongoClient(mongoConnectionString);
+            var databaseName = new MongoUrlBuilder(mongoConnectionString).DatabaseName;
             return mongoClient.GetDatabase(databaseName);
         }
     }
