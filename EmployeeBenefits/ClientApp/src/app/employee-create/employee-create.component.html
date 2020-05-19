@@ -12,9 +12,10 @@
       </div>
       <div class="form-group">
         <label for="employeeIdentifier">Employee Identifier</label>
-        <input [(ngModel)]="upsertEmployee.employeeIdentifier" [attr.disabled]="isUpdatingExistingEmployee ? 'disabled' : null" [ngClass]="{'form-submitted': formSubmitted}" formControlName="employeeIdentifier" (focusout)="getEmployeeIdentifierExists()"
+        <input [(ngModel)]="upsertEmployee.employeeIdentifier" [attr.disabled]="isUpdatingExistingEmployee ? 'disabled' : null" [ngClass]="{'form-submitted': formSubmitted}" formControlName="employeeIdentifier"
+               (focusout)="getEmployeeIdentifierExists()"
                class="form-control" id="employeeIdentifier" placeholder="Employee Identifier">
-        <small id="employeeIdHelp" class="form-text text-muted">This value must be unique per employee.</small>
+        <small *ngIf="employeeIdentifierExists" id="employeeIdentifierHelp" class="text-danger">This value is assigned to another employee.</small>
       </div>
       <div class="row">
         <div class="form-group col-6">

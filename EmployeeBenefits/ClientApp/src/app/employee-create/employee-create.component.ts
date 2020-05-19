@@ -118,8 +118,11 @@ export class EmployeeCreateComponent implements OnInit {
       .subscribe((e: Employee) => {
         if (e) {
           this.employeeIdentifierExists = true;
+          this.employeeForm.controls.employeeIdentifier.setErrors({ 'incorrect': true });
+        } else {
+          this.employeeIdentifierExists = false;
+          this.employeeForm.controls.employeeIdentifier.setErrors(null);
         }
-        this.employeeIdentifierExists = false;
       });
   }
 
