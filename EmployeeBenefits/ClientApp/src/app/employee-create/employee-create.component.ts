@@ -101,7 +101,8 @@ export class EmployeeCreateComponent implements OnInit {
   }
 
   public async addDependent() {
-    if (!this.newDependent.firstName || ! this.newDependent.lastName) return;
+    if (!this.newDependent.firstName || this.newDependent.firstName.trim() === ""
+      || !this.newDependent.lastName || this.newDependent.lastName.trim() === "") return;
     this.newEmployee.dependents.push(this.newDependent);
     this.newDependent = <Dependent>{ firstName: "", lastName: "" };
     if (this.employeeForm.valid) {
