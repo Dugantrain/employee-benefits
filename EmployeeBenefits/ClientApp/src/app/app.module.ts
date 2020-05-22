@@ -27,8 +27,8 @@ import { EmployeeCreateComponent } from './employee-create/employee-create.compo
     RouterModule.forRoot([
       { path: '', component: EmployeeListComponent, pathMatch: 'full' },
       { path: 'list', component: EmployeeListComponent },
-      { path: 'create', component: EmployeeCreateComponent },
-      { path: 'create/:id', component: EmployeeCreateComponent }
+      { path: 'manage', component: EmployeeCreateComponent },
+      { path: 'manage/:id', component: EmployeeCreateComponent }
     ])
   ],
   providers: [],

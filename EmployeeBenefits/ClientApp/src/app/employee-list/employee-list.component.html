@@ -6,7 +6,7 @@
       <em *ngIf="employees.length == 0">Add an employee to get started.</em>
     </div>
     <div class="col-6">
-      <button class="btn btn-primary float-right" [routerLink]="['/create']">Add Employee</button>
+      <button class="btn btn-primary float-right" [routerLink]="['/manage']">Add Employee</button>
     </div>
   </div>
   <div>
@@ -31,7 +31,7 @@
           <td>{{ employee.totalYearlyNetBenefitsCost | number:'.2-2' }}</td>
           <td>{{ employee.payPeriodNetBenefitsCost | number:'.2-2' }}</td>
           <td>
-            <button class="btn btn-sm btn-secondary mr-1" [routerLink]="['/create',employee.id]">Update</button>
+            <button class="btn btn-sm btn-secondary mr-1" [routerLink]="['/manage',employee.id]">Update</button>
             <button class="btn btn-sm btn-danger" (click)="removeEmployee(employee.id)">Remove</button>
           </td>
         </tr>
