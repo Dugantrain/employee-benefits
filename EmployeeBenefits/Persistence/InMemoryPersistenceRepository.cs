@@ -39,6 +39,10 @@ namespace EmployeeBenefits.Persistence
             {
                 employeeList.RemoveAll(e => e.Id == employee.Id);
             }
+            else
+            {
+                employee.Id = Guid.NewGuid().ToString();
+            }
             employeeList.Add(employee);
             _employees = employeeList;
             return Task.FromResult(employee);
